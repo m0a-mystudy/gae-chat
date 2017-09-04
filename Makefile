@@ -18,15 +18,20 @@ delete:
 
 ##### Convenience targets ######
 
-REPO:=github.com/m0a-mystudy/appengine01
-GAE_PROJECT:=projectName
+REPO:=github.com/m0a-mystudy/gae-chat
+GAE_PROJECT:=gaechatx
+PORT:=9089
 
-init: depend bootstrap 
+
+init:  bootstrap controllers
 gen: clean generate 
 
-depend:
-	@which glide || go get -v github.com/Masterminds/glide
-	@glide install
+# depend:
+# 	@which glide || go get -v github.com/Masterminds/glide
+# 	@glide install
+
+controllers:
+	@goagen controller -pkg controllers -d $(REPO)/design -o controllers
 
 bootstrap:
 	@goagen bootstrap -d $(REPO)/design
@@ -45,35 +50,11 @@ generate:
 	@goagen swagger -d $(REPO)/design
 	@goagen client  -d $(REPO)/design
 
-# context:
-# 	@which gorep || go get -v github.com/novalagung/gorep
-# 	@gorep -path="./vendor/github.com/goadesign/goa" \
-#           -from="context" \
-#           -to="golang.org/x/net/context"
-# 	@gorep -path="./app" \
-#           -from="context" \
-#           -to="golang.org/x/net/context"
-# 	@gorep -path="./client" \
-#           -from="context" \
-#           -to="golang.org/x/net/context"
-# 	@gorep -path="./tool" \
-#           -from="context" \
-#           -to="golang.org/x/net/context"
-# 	@gorep -path="./" \
-#           -from="../app" \
-#           -to="$(REPO)/app"
-# 	@gorep -path="./" \
-#           -from="../client" \
-#           -to="$(REPO)/client"
-# 	@gorep -path="./" \
-#           -from="../tool/cli" \
-#           -to="$(REPO)/tool/cli"
-
 deploy:
-	goapp deploy -application $(GAE_PROJECT) ./app
+	goapp deploy -application $(GAE_PROJECT) ./server
 
 rollback:
-	appcfg.py rollback ./app -A $(GAE_PROJECT)
+	appcfg.py rollback ./server -A $(GAE_PROJECT)
 
 local:
-	goapp serve ./server
+	goapp serve -port $(PORT) ./server
