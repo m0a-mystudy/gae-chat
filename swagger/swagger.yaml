@@ -10,7 +10,7 @@ definitions:
     example:
       body: this is chat message
       googleUserID: "12345678"
-      postDate: 2012-02-25T14:57:31+09:00
+      postDate: 2012-02-25T05:57:31Z
     properties:
       body:
         example: this is chat message
@@ -22,7 +22,7 @@ definitions:
         type: string
       postDate:
         default: 1978-06-30T10:00:00+09:00
-        example: 2012-02-25T14:57:31+09:00
+        example: 2012-02-25T05:57:31Z
         format: date-time
         type: string
     required:
@@ -40,7 +40,7 @@ definitions:
       id: 4.0552028e+18
       image: Beatae occaecati temporibus consequatur molestias.
       name: Aspernatur inventore aut fuga sed odio.
-      postDate: 1996-05-14T15:37:01+09:00
+      postDate: 1996-05-14T06:37:01Z
     properties:
       body:
         example: In voluptas placeat est.
@@ -62,7 +62,7 @@ definitions:
         example: Aspernatur inventore aut fuga sed odio.
         type: string
       postDate:
-        example: 1996-05-14T15:37:01+09:00
+        example: 1996-05-14T06:37:01Z
         format: date-time
         type: string
     title: 'Mediatype identifier: application/vnd.message_with_account+json; view=default'
@@ -77,14 +77,7 @@ definitions:
       id: 4.0552028e+18
       image: Beatae occaecati temporibus consequatur molestias.
       name: Aspernatur inventore aut fuga sed odio.
-      postDate: 1996-05-14T15:37:01+09:00
-    - body: In voluptas placeat est.
-      email: Occaecati explicabo eos ipsa dolorem accusantium.
-      googleUserID: Molestiae aut laboriosam.
-      id: 4.0552028e+18
-      image: Beatae occaecati temporibus consequatur molestias.
-      name: Aspernatur inventore aut fuga sed odio.
-      postDate: 1996-05-14T15:37:01+09:00
+      postDate: 1996-05-14T06:37:01Z
     items:
       $ref: '#/definitions/Message_with_account'
     title: 'Mediatype identifier: application/vnd.message_with_account+json; type=collection;
@@ -94,7 +87,7 @@ definitions:
     example:
       body: this is chat message
       googleUserID: "12345678"
-      postDate: 1997-11-03T20:24:29+09:00
+      postDate: 1997-11-03T11:24:29Z
     properties:
       body:
         example: this is chat message
@@ -106,7 +99,7 @@ definitions:
         type: string
       postDate:
         default: 1978-06-30T10:00:00+09:00
-        example: 1997-11-03T20:24:29+09:00
+        example: 1997-11-03T11:24:29Z
         format: date-time
         type: string
     required:
@@ -117,14 +110,13 @@ definitions:
   Room:
     description: A room (default view)
     example:
-      created: 1998-08-24T01:31:34+09:00
+      created: 1998-08-23T16:31:34Z
       description: room description
-      id: 1.7332972e+18
       name: room001
     properties:
       created:
         description: Date of creation
-        example: 1998-08-24T01:31:34+09:00
+        example: 1998-08-23T16:31:34Z
         format: date-time
         type: string
       description:
@@ -132,11 +124,6 @@ definitions:
         example: room description
         maxLength: 400
         type: string
-      id:
-        description: ID of room
-        example: 1.7332972e+18
-        format: int64
-        type: integer
       name:
         description: Name of room
         example: room001
@@ -144,14 +131,20 @@ definitions:
     required:
     - name
     - description
+    - created
     title: 'Mediatype identifier: application/vnd.room+json; view=default'
     type: object
   RoomCollection:
     description: RoomCollection is the media type for an array of Room (default view)
     example:
-    - created: 1998-08-24T01:31:34+09:00
+    - created: 1998-08-23T16:31:34Z
       description: room description
-      id: 1.7332972e+18
+      name: room001
+    - created: 1998-08-23T16:31:34Z
+      description: room description
+      name: room001
+    - created: 1998-08-23T16:31:34Z
+      description: room description
       name: room001
     items:
       $ref: '#/definitions/Room'
@@ -159,14 +152,13 @@ definitions:
     type: array
   RoomPayload:
     example:
-      created: 2006-06-06T13:07:42+09:00
+      created: 1971-07-23T11:02:36Z
       description: room description
-      id: 6.822046e+18
       name: room001
     properties:
       created:
         description: Date of creation
-        example: 2006-06-06T13:07:42+09:00
+        example: 1971-07-23T11:02:36Z
         format: date-time
         type: string
       description:
@@ -174,11 +166,6 @@ definitions:
         example: room description
         maxLength: 400
         type: string
-      id:
-        description: ID of room
-        example: 6.822046e+18
-        format: int64
-        type: integer
       name:
         description: Name of room
         example: room001
@@ -271,6 +258,8 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/RoomPayload'
+      produces:
+      - application/vnd.goa.error
       responses:
         "201":
           description: Resource created
@@ -281,6 +270,8 @@ paths:
               type: string
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
       schemes:
       - http
       security:
@@ -289,15 +280,16 @@ paths:
       summary: post room
       tags:
       - room
-  /rooms/{roomID}:
+  /rooms/{name}:
     get:
-      description: Retrieve room with given id
+      description: Retrieve room with given name
       operationId: room#show
       parameters:
-      - in: path
-        name: roomID
+      - description: Name of room
+        in: path
+        name: name
         required: true
-        type: integer
+        type: string
       produces:
       - application/vnd.goa.error
       - application/vnd.room+json
@@ -317,7 +309,7 @@ paths:
       summary: show room
       tags:
       - room
-  /rooms/{roomID}/messages:
+  /rooms/{name}/messages:
     get:
       description: Retrieve all messages.
       operationId: message#list
@@ -326,13 +318,14 @@ paths:
         name: limit
         required: false
         type: integer
+      - description: Name of room
+        in: path
+        name: name
+        required: true
+        type: string
       - in: query
         name: offset
         required: false
-        type: integer
-      - in: path
-        name: roomID
-        required: true
         type: integer
       produces:
       - application/vnd.message_with_account+json; type=collection
@@ -356,10 +349,11 @@ paths:
           * `api:access`
       operationId: message#post
       parameters:
-      - in: path
-        name: roomID
+      - description: Name of room
+        in: path
+        name: name
         required: true
-        type: integer
+        type: string
       - in: body
         name: payload
         required: true
@@ -383,7 +377,7 @@ paths:
       summary: post message
       tags:
       - message
-  /rooms/{roomID}/messages/{messageID}:
+  /rooms/{name}/messages/{messageID}:
     get:
       description: Retrieve message with given id
       operationId: message#show
@@ -392,10 +386,11 @@ paths:
         name: messageID
         required: true
         type: integer
-      - in: path
-        name: roomID
+      - description: Name of room
+        in: path
+        name: name
         required: true
-        type: integer
+        type: string
       produces:
       - application/vnd.goa.error
       - application/vnd.message+json

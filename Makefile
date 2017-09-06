@@ -23,15 +23,13 @@ GAE_PROJECT:=gaechatx
 PORT:=9089
 
 
-init:  bootstrap controllers
+init:  bootstrap 
 gen: clean generate 
 
 # depend:
 # 	@which glide || go get -v github.com/Masterminds/glide
 # 	@glide install
 
-controllers:
-	@goagen controller -pkg controllers -d $(REPO)/design -o controllers
 
 bootstrap:
 	@goagen bootstrap -d $(REPO)/design
@@ -48,7 +46,8 @@ clean:
 generate:
 	@goagen app     -d $(REPO)/design
 	@goagen swagger -d $(REPO)/design
-	@goagen client  -d $(REPO)/design
+	@goagen controller --pkg controllers -d $(REPO)/design -o controllers
+# @goagen client  -d $(REPO)/design
 
 deploy:
 	goapp deploy -application $(GAE_PROJECT) ./server

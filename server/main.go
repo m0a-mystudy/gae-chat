@@ -9,7 +9,6 @@ import (
 	"github.com/goadesign/goa/middleware"
 	"github.com/m0a-mystudy/gae-chat/app"
 	"github.com/m0a-mystudy/gae-chat/controllers"
-	"github.com/m0a-mystudy/gae-chat/login"
 	"github.com/m0a/goagooglelogin"
 )
 
@@ -18,7 +17,6 @@ func init() {
 	service := goa.New("appengine")
 
 	// Mount middleware
-	service.Use(login.LoginMiddleWare(&GoogleLoginConf))
 	service.Use(middleware.RequestID())
 	service.Use(middleware.LogRequest(true))
 	service.Use(middleware.ErrorHandler(service, true))

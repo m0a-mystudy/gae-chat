@@ -49,11 +49,11 @@ var _ = Resource("room", func() {
 
 	Action("show", func() {
 		Routing(
-			GET("/:roomID"),
+			GET("/:name"),
 		)
-		Description("Retrieve room with given id")
+		Description("Retrieve room with given name")
 		Params(func() {
-			Param("roomID", Integer)
+			Param("name", String)
 		})
 		Response(OK)
 		Response(NotFound)
@@ -69,7 +69,7 @@ var _ = Resource("room", func() {
 		})
 
 		Response(Created, "/rooms/[0-9]+")
-		Response(BadRequest)
+		Response(BadRequest, ErrorMedia)
 	})
 
 	// Action("watch", func() {
@@ -220,24 +220,20 @@ var Room = MediaType("application/vnd.room+json", func() {
 	Description("A room")
 	Reference(RoomPayload)
 	Attributes(func() {
-		Attribute("id")
 		Attribute("name")
 		Attribute("description")
 		Attribute("created")
-		Required("name", "description")
+		Required("name", "description", "created")
 	})
 
 	View("default", func() {
-		Attribute("id")
 		Attribute("name")
 		Attribute("description")
 		Attribute("created")
-
 	})
 })
 
 var RoomPayload = Type("RoomPayload", func() {
-	Attribute("id", Integer, "ID of room")
 	Attribute("name", String, "Name of room", func() {
 		Example("room001")
 	})

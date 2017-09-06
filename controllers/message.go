@@ -28,11 +28,7 @@ func (c *MessageController) List(ctx *app.ListMessageContext) error {
 
 // Post runs the post action.
 func (c *MessageController) Post(ctx *app.PostMessageContext) error {
-	// MessageController_Post: start_implement
-
-	// Put your logic here
-
-	// MessageController_Post: end_implement
+	// /ctx.Payload.
 	return nil
 }
 
