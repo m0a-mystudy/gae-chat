@@ -20,6 +20,7 @@ func RunInTesting(t *testing.T, f func(m *Model, t *testing.T) error) {
 	err = f(m, t)
 	if err != nil {
 		t.Fatalf("err - %v", err)
+		panic(err)
 	}
 
 }
@@ -37,27 +38,25 @@ func TestPostRoom(t *testing.T) {
 func TestRooms(t *testing.T) {
 	RunInTesting(t, func(m *Model, t *testing.T) error {
 
-		err := m.RunInTransaction(func(tg *Model) error {
-			_, err := m.PostRoom("s1", "desc1")
-			if err != nil {
-				return err
-			}
-			_, err = m.PostRoom("s2", "desc2")
-			if err != nil {
-				return err
-			}
-			rooms, err := m.Rooms(0, 100)
-			if err != nil {
-				return err
-			}
-			fmt.Printf("%#v\n", rooms)
-			return err
-		}, nil)
-
+		key, err := m.PostRoom("s1", "desc1")
 		if err != nil {
 			return err
 		}
+		m.ForceApply(key)
+
+		key, err = m.PostRoom("s2", "desc2")
+		if err != nil {
+			return err
+		}
+		m.ForceApply(key)
+
+		rooms, err := m.Rooms(0, 100)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("%#v\n", rooms)
 		return nil
+
 	})
 }
 func TestLoginModel(t *testing.T) {

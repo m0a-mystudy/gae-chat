@@ -54,11 +54,14 @@ type Reader interface {
 }
 
 type Writer interface {
+	RunInTransaction(f func(tg *Model) error, opts *datastore.TransactionOptions) error
 	PostRoom(name, description string) (*datastore.Key, error)
 }
 
 type Model struct {
 	*goon.Goon
+	goaContext       context.Context
+	appEngineContext context.Context
 }
 
 var _ Reader = &Model{}
@@ -66,16 +69,21 @@ var _ Writer = &Model{}
 
 func New(ctx context.Context) *Model {
 	r := goa.ContextRequest(ctx).Request
-	g := goon.FromContext(appengine.NewContext(r))
+	a := appengine.NewContext(r)
+	g := goon.FromContext(a)
 	return &Model{
-		Goon: g,
+		Goon:             g,
+		goaContext:       ctx,
+		appEngineContext: a,
 	}
 }
 
-func FromAppEngineCtx(ctx context.Context) *Model {
+func FromAppEngineCTX(ctx context.Context) *Model {
 	g := goon.FromContext(ctx)
 	return &Model{
-		Goon: g,
+		Goon:             g,
+		goaContext:       nil,
+		appEngineContext: ctx,
 	}
 }
 
@@ -86,7 +94,7 @@ func TestContext() (*Model, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	return FromAppEngineCtx(c), done, nil
+	return FromAppEngineCTX(c), done, nil
 }
 
 // RunInTransaction is Transaction wrapper
@@ -110,6 +118,13 @@ func (m *Model) Room(name string) (*Room, error) {
 		return nil, err
 	}
 	return room, nil
+}
+
+func (m *Model) ForceApply(key *datastore.Key) {
+	ctx := m.appEngineContext
+	var dst interface{}
+	datastore.Get(ctx, key, &dst)
+	_ = dst
 }
 
 // Rooms is get Room List
