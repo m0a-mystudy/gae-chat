@@ -15,6 +15,7 @@ import (
 	"github.com/goadesign/goa"
 	"net/http"
 	"strconv"
+	"unicode/utf8"
 )
 
 // ListMessageContext provides the message list action context.
@@ -51,6 +52,15 @@ func NewListMessageContext(ctx context.Context, r *http.Request, service *goa.Se
 	if len(paramName) > 0 {
 		rawName := paramName[0]
 		rctx.Name = rawName
+		if ok := goa.ValidatePattern(`[a-z|0-9]+`, rctx.Name); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`name`, rctx.Name, `[a-z|0-9]+`))
+		}
+		if utf8.RuneCountInString(rctx.Name) < 3 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`name`, rctx.Name, utf8.RuneCountInString(rctx.Name), 3, true))
+		}
+		if utf8.RuneCountInString(rctx.Name) > 20 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`name`, rctx.Name, utf8.RuneCountInString(rctx.Name), 20, false))
+		}
 	}
 	paramOffset := req.Params["offset"]
 	if len(paramOffset) > 0 {
@@ -67,10 +77,10 @@ func NewListMessageContext(ctx context.Context, r *http.Request, service *goa.Se
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListMessageContext) OK(r MessageWithAccountCollection) error {
-	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.message_with_account+json; type=collection")
+func (ctx *ListMessageContext) OK(r MessageCollection) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.message+json; type=collection")
 	if r == nil {
-		r = MessageWithAccountCollection{}
+		r = MessageCollection{}
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
@@ -103,6 +113,15 @@ func NewPostMessageContext(ctx context.Context, r *http.Request, service *goa.Se
 	if len(paramName) > 0 {
 		rawName := paramName[0]
 		rctx.Name = rawName
+		if ok := goa.ValidatePattern(`[a-z|0-9]+`, rctx.Name); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`name`, rctx.Name, `[a-z|0-9]+`))
+		}
+		if utf8.RuneCountInString(rctx.Name) < 3 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`name`, rctx.Name, utf8.RuneCountInString(rctx.Name), 3, true))
+		}
+		if utf8.RuneCountInString(rctx.Name) > 20 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`name`, rctx.Name, utf8.RuneCountInString(rctx.Name), 20, false))
+		}
 	}
 	return &rctx, err
 }
@@ -150,6 +169,15 @@ func NewShowMessageContext(ctx context.Context, r *http.Request, service *goa.Se
 	if len(paramName) > 0 {
 		rawName := paramName[0]
 		rctx.Name = rawName
+		if ok := goa.ValidatePattern(`[a-z|0-9]+`, rctx.Name); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`name`, rctx.Name, `[a-z|0-9]+`))
+		}
+		if utf8.RuneCountInString(rctx.Name) < 3 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`name`, rctx.Name, utf8.RuneCountInString(rctx.Name), 3, true))
+		}
+		if utf8.RuneCountInString(rctx.Name) > 20 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`name`, rctx.Name, utf8.RuneCountInString(rctx.Name), 20, false))
+		}
 	}
 	return &rctx, err
 }
@@ -283,6 +311,15 @@ func NewShowRoomContext(ctx context.Context, r *http.Request, service *goa.Servi
 	if len(paramName) > 0 {
 		rawName := paramName[0]
 		rctx.Name = rawName
+		if ok := goa.ValidatePattern(`[a-z|0-9]+`, rctx.Name); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`name`, rctx.Name, `[a-z|0-9]+`))
+		}
+		if utf8.RuneCountInString(rctx.Name) < 3 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`name`, rctx.Name, utf8.RuneCountInString(rctx.Name), 3, true))
+		}
+		if utf8.RuneCountInString(rctx.Name) > 20 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`name`, rctx.Name, utf8.RuneCountInString(rctx.Name), 20, false))
+		}
 	}
 	return &rctx, err
 }

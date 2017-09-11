@@ -35,46 +35,47 @@ func (mt *Account) Validate() (err error) {
 //
 // Identifier: application/vnd.message+json; view=default
 type Message struct {
-	Body         string    `form:"body" json:"body" xml:"body"`
-	GoogleUserID string    `form:"googleUserID" json:"googleUserID" xml:"googleUserID"`
-	PostDate     time.Time `form:"postDate" json:"postDate" xml:"postDate"`
+	Auther  string    `form:"auther" json:"auther" xml:"auther"`
+	Content string    `form:"content" json:"content" xml:"content"`
+	Created time.Time `form:"created" json:"created" xml:"created"`
+	ID      int       `form:"id" json:"id" xml:"id"`
 }
 
 // Validate validates the Message media type instance.
 func (mt *Message) Validate() (err error) {
-	if mt.GoogleUserID == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "googleUserID"))
+
+	if mt.Content == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "content"))
 	}
-	if mt.Body == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "body"))
+	if mt.Auther == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "auther"))
 	}
 
-	if utf8.RuneCountInString(mt.Body) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.body`, mt.Body, utf8.RuneCountInString(mt.Body), 1, true))
+	if utf8.RuneCountInString(mt.Content) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.content`, mt.Content, utf8.RuneCountInString(mt.Content), 1, true))
 	}
-	if utf8.RuneCountInString(mt.Body) > 400 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.body`, mt.Body, utf8.RuneCountInString(mt.Body), 400, false))
+	if utf8.RuneCountInString(mt.Content) > 400 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.content`, mt.Content, utf8.RuneCountInString(mt.Content), 400, false))
 	}
 	return
 }
 
-// A Message with account (default view)
+// MessageCollection is the media type for an array of Message (default view)
 //
-// Identifier: application/vnd.message_with_account+json; view=default
-type MessageWithAccount struct {
-	Body         *string    `form:"body,omitempty" json:"body,omitempty" xml:"body,omitempty"`
-	Email        *string    `form:"email,omitempty" json:"email,omitempty" xml:"email,omitempty"`
-	GoogleUserID *string    `form:"googleUserID,omitempty" json:"googleUserID,omitempty" xml:"googleUserID,omitempty"`
-	ID           *int       `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
-	Image        *string    `form:"image,omitempty" json:"image,omitempty" xml:"image,omitempty"`
-	Name         *string    `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-	PostDate     *time.Time `form:"postDate,omitempty" json:"postDate,omitempty" xml:"postDate,omitempty"`
-}
+// Identifier: application/vnd.message+json; type=collection; view=default
+type MessageCollection []*Message
 
-// Message_with_accountCollection is the media type for an array of Message_with_account (default view)
-//
-// Identifier: application/vnd.message_with_account+json; type=collection; view=default
-type MessageWithAccountCollection []*MessageWithAccount
+// Validate validates the MessageCollection media type instance.
+func (mt MessageCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
 
 // A room (default view)
 //
@@ -99,6 +100,15 @@ func (mt *Room) Validate() (err error) {
 
 	if utf8.RuneCountInString(mt.Description) > 400 {
 		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.description`, mt.Description, utf8.RuneCountInString(mt.Description), 400, false))
+	}
+	if ok := goa.ValidatePattern(`[a-z|0-9]+`, mt.Name); !ok {
+		err = goa.MergeErrors(err, goa.InvalidPatternError(`response.name`, mt.Name, `[a-z|0-9]+`))
+	}
+	if utf8.RuneCountInString(mt.Name) < 3 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, mt.Name, utf8.RuneCountInString(mt.Name), 3, true))
+	}
+	if utf8.RuneCountInString(mt.Name) > 20 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, mt.Name, utf8.RuneCountInString(mt.Name), 20, false))
 	}
 	return
 }

@@ -8,115 +8,84 @@ definitions:
   Message:
     description: A Message (default view)
     example:
-      body: this is chat message
-      googleUserID: "12345678"
-      postDate: 2012-02-25T05:57:31Z
+      auther: Voluptatem in voluptas placeat est beatae occaecati.
+      content: g4kyd6
+      created: 2015-05-18T10:20:41Z
+      id: 4.1725402e+18
     properties:
-      body:
-        example: this is chat message
+      auther:
+        example: Voluptatem in voluptas placeat est beatae occaecati.
+        type: string
+      content:
+        example: g4kyd6
         maxLength: 400
         minLength: 1
         type: string
-      googleUserID:
-        example: "12345678"
-        type: string
-      postDate:
-        default: 1978-06-30T10:00:00+09:00
-        example: 2012-02-25T05:57:31Z
+      created:
+        example: 2015-05-18T10:20:41Z
         format: date-time
-        type: string
-    required:
-    - googleUserID
-    - body
-    - postDate
-    title: 'Mediatype identifier: application/vnd.message+json; view=default'
-    type: object
-  Message_with_account:
-    description: A Message with account (default view)
-    example:
-      body: In voluptas placeat est.
-      email: Occaecati explicabo eos ipsa dolorem accusantium.
-      googleUserID: Molestiae aut laboriosam.
-      id: 4.0552028e+18
-      image: Beatae occaecati temporibus consequatur molestias.
-      name: Aspernatur inventore aut fuga sed odio.
-      postDate: 1996-05-14T06:37:01Z
-    properties:
-      body:
-        example: In voluptas placeat est.
-        type: string
-      email:
-        example: Occaecati explicabo eos ipsa dolorem accusantium.
-        type: string
-      googleUserID:
-        example: Molestiae aut laboriosam.
         type: string
       id:
-        example: 4.0552028e+18
+        example: 4.1725402e+18
         format: int64
         type: integer
-      image:
-        example: Beatae occaecati temporibus consequatur molestias.
-        type: string
-      name:
-        example: Aspernatur inventore aut fuga sed odio.
-        type: string
-      postDate:
-        example: 1996-05-14T06:37:01Z
-        format: date-time
-        type: string
-    title: 'Mediatype identifier: application/vnd.message_with_account+json; view=default'
+    required:
+    - id
+    - content
+    - auther
+    - created
+    title: 'Mediatype identifier: application/vnd.message+json; view=default'
     type: object
-  Message_with_accountCollection:
-    description: Message_with_accountCollection is the media type for an array of
-      Message_with_account (default view)
+  MessageCollection:
+    description: MessageCollection is the media type for an array of Message (default
+      view)
     example:
-    - body: In voluptas placeat est.
-      email: Occaecati explicabo eos ipsa dolorem accusantium.
-      googleUserID: Molestiae aut laboriosam.
-      id: 4.0552028e+18
-      image: Beatae occaecati temporibus consequatur molestias.
-      name: Aspernatur inventore aut fuga sed odio.
-      postDate: 1996-05-14T06:37:01Z
+    - auther: Voluptatem in voluptas placeat est beatae occaecati.
+      content: g4kyd6
+      created: 2015-05-18T10:20:41Z
+      id: 4.1725402e+18
+    - auther: Voluptatem in voluptas placeat est beatae occaecati.
+      content: g4kyd6
+      created: 2015-05-18T10:20:41Z
+      id: 4.1725402e+18
     items:
-      $ref: '#/definitions/Message_with_account'
-    title: 'Mediatype identifier: application/vnd.message_with_account+json; type=collection;
-      view=default'
+      $ref: '#/definitions/Message'
+    title: 'Mediatype identifier: application/vnd.message+json; type=collection; view=default'
     type: array
   MessagePayload:
     example:
-      body: this is chat message
-      googleUserID: "12345678"
-      postDate: 1997-11-03T11:24:29Z
+      auther: Consequatur molestias facilis.
+      content: wj9vhp
+      created: 2013-09-21T07:19:10Z
     properties:
-      body:
-        example: this is chat message
+      auther:
+        example: Consequatur molestias facilis.
+        type: string
+      content:
+        example: wj9vhp
         maxLength: 400
         minLength: 1
         type: string
-      googleUserID:
-        example: "12345678"
-        type: string
-      postDate:
-        default: 1978-06-30T10:00:00+09:00
-        example: 1997-11-03T11:24:29Z
+      created:
+        example: 2013-09-21T07:19:10Z
         format: date-time
         type: string
     required:
-    - body
-    - postDate
+    - content
+    - auther
+    - created
     title: MessagePayload
     type: object
   Room:
     description: A room (default view)
     example:
-      created: 1998-08-23T16:31:34Z
+      created: 1984-01-21T14:08:16Z
       description: room description
       name: room001
     properties:
       created:
         description: Date of creation
-        example: 1998-08-23T16:31:34Z
+        example: 1984-01-21T14:08:16Z
         format: date-time
         type: string
       description:
@@ -127,6 +96,9 @@ definitions:
       name:
         description: Name of room
         example: room001
+        maxLength: 20
+        minLength: 3
+        pattern: '[a-z|0-9]+'
         type: string
     required:
     - name
@@ -137,13 +109,7 @@ definitions:
   RoomCollection:
     description: RoomCollection is the media type for an array of Room (default view)
     example:
-    - created: 1998-08-23T16:31:34Z
-      description: room description
-      name: room001
-    - created: 1998-08-23T16:31:34Z
-      description: room description
-      name: room001
-    - created: 1998-08-23T16:31:34Z
+    - created: 1984-01-21T14:08:16Z
       description: room description
       name: room001
     items:
@@ -152,13 +118,13 @@ definitions:
     type: array
   RoomPayload:
     example:
-      created: 1971-07-23T11:02:36Z
+      created: 1988-03-17T04:43:39Z
       description: room description
       name: room001
     properties:
       created:
         description: Date of creation
-        example: 1971-07-23T11:02:36Z
+        example: 1988-03-17T04:43:39Z
         format: date-time
         type: string
       description:
@@ -169,6 +135,9 @@ definitions:
       name:
         description: Name of room
         example: room001
+        maxLength: 20
+        minLength: 3
+        pattern: '[a-z|0-9]+'
         type: string
     required:
     - name
@@ -212,7 +181,7 @@ definitions:
         type: string
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
-host: localhost:8080
+host: localhost:9089
 info:
   description: goa study chat api
   title: goa study chat
@@ -246,11 +215,7 @@ paths:
       tags:
       - room
     post:
-      description: |-
-        Create new Room
-
-        Required security scopes:
-          * `api:access`
+      description: Create new Room
       operationId: room#post
       parameters:
       - in: body
@@ -274,9 +239,6 @@ paths:
             $ref: '#/definitions/error'
       schemes:
       - http
-      security:
-      - jwt:
-        - api:access
       summary: post room
       tags:
       - room
@@ -287,7 +249,10 @@ paths:
       parameters:
       - description: Name of room
         in: path
+        maxLength: 20
+        minLength: 3
         name: name
+        pattern: '[a-z|0-9]+'
         required: true
         type: string
       produces:
@@ -320,7 +285,10 @@ paths:
         type: integer
       - description: Name of room
         in: path
+        maxLength: 20
+        minLength: 3
         name: name
+        pattern: '[a-z|0-9]+'
         required: true
         type: string
       - in: query
@@ -328,12 +296,12 @@ paths:
         required: false
         type: integer
       produces:
-      - application/vnd.message_with_account+json; type=collection
+      - application/vnd.message+json; type=collection
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/Message_with_accountCollection'
+            $ref: '#/definitions/MessageCollection'
         "404":
           description: Not Found
       schemes:
@@ -342,16 +310,15 @@ paths:
       tags:
       - message
     post:
-      description: |-
-        Create new message
-
-        Required security scopes:
-          * `api:access`
+      description: Create new message
       operationId: message#post
       parameters:
       - description: Name of room
         in: path
+        maxLength: 20
+        minLength: 3
         name: name
+        pattern: '[a-z|0-9]+'
         required: true
         type: string
       - in: body
@@ -371,9 +338,6 @@ paths:
           description: Bad Request
       schemes:
       - http
-      security:
-      - jwt:
-        - api:access
       summary: post message
       tags:
       - message
@@ -388,7 +352,10 @@ paths:
         type: integer
       - description: Name of room
         in: path
+        maxLength: 20
+        minLength: 3
         name: name
+        pattern: '[a-z|0-9]+'
         required: true
         type: string
       produces:

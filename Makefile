@@ -57,3 +57,6 @@ rollback:
 
 local:
 	goapp serve -port $(PORT) ./server
+
+test:
+	@cd server; goapp test -v $(REPO)/models

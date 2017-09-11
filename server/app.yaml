@@ -6,6 +6,10 @@ handlers:
 - url: /.*
   script: _go_app
 
+skip_files:
+  - ^(node_modules/.*)
+  - ^(.*/)?.*/node_modules/.*$
+  - gae-chat-client-api/
 
 env_variables:
   OPENID_GOOGLE_SECRET: "NHrMUaZ7ohx_ZDMCXFwGqfeD"

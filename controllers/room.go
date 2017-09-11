@@ -3,8 +3,6 @@ package controllers
 import (
 	"fmt"
 
-	"google.golang.org/appengine/datastore"
-
 	"github.com/goadesign/goa"
 	"github.com/m0a-mystudy/gae-chat/app"
 	"github.com/m0a-mystudy/gae-chat/models"
@@ -25,10 +23,10 @@ func ToRoomMedia(r *models.Room) *app.Room {
 }
 
 // ToRoomCollectionMedia is translater from models to apps
-func ToRoomCollectionMedia(rs *[]models.Room) *app.RoomCollection {
-	res := make(app.RoomCollection, len(*rs))
-	for _, r := range *rs {
-		res = append(res, ToRoomMedia(&r))
+func ToRoomCollectionMedia(rs []*models.Room) *app.RoomCollection {
+	res := app.RoomCollection{}
+	for _, r := range rs {
+		res = append(res, ToRoomMedia(r))
 	}
 	return &res
 }
@@ -40,37 +38,42 @@ func NewRoomController(service *goa.Service) *RoomController {
 
 // List runs the list action.
 func (c *RoomController) List(ctx *app.ListRoomContext) error {
-	g := models.Goon(ctx)
-	rooms := []models.Room{}
-	g.GetAll(datastore.NewQuery("Room"), &rooms)
 
-	res := ToRoomCollectionMedia(&rooms)
+	IfNil := func(num *int, d int) int {
+		if num != nil {
+			return *num
+		}
+		return d
+	}
+
+	limit := IfNil(ctx.Limit, 100)
+	offset := IfNil(ctx.Offset, 0)
+
+	m := models.New(ctx)
+	rooms, err := m.Rooms(offset, limit)
+	if err != nil {
+		goa.LogError(ctx, "msg", "error", err.Error())
+		return ctx.NotFound()
+	}
+
+	// g.GetAll(datastore.NewQuery("Room"), &rooms)
+
+	goa.LogInfo(ctx, "msg", "collection", fmt.Sprintf("%#v\n", rooms))
+	res := ToRoomCollectionMedia(rooms)
 	return ctx.OK(*res)
+
 }
 
 // Post runs the post action.
 func (c *RoomController) Post(ctx *app.PostRoomContext) error {
 
-	room := &models.Room{
-		Name: ctx.Payload.Name,
-	}
-
-	g := models.Goon(ctx)
-
-	err := g.Get(room)
-	if err == nil {
-		return ctx.BadRequest(fmt.Errorf("already exist Room %s", room.Name))
-	}
-
-	room = &models.Room{
-		Name:        ctx.Payload.Name,
-		Created:     *ctx.Payload.Created,
-		Description: ctx.Payload.Description,
-	}
-	_, err = g.Put(room)
+	m := models.New(ctx)
+	key, err := m.PostRoom(ctx.Payload.Name, ctx.Payload.Description)
 	if err != nil {
+		goa.LogError(ctx, "msg", "error", err.Error())
 		return ctx.BadRequest(err)
 	}
+	goa.LogInfo(ctx, "msg", "key", key.String())
 
 	return ctx.Created()
 }
@@ -78,9 +81,9 @@ func (c *RoomController) Post(ctx *app.PostRoomContext) error {
 // Show runs the show action.
 func (c *RoomController) Show(ctx *app.ShowRoomContext) error {
 
-	room := &models.Room{Name: ctx.Name}
-	g := models.Goon(ctx)
-	err := g.Get(room)
+	m := models.New(ctx)
+	room, err := m.Room(ctx.Name)
+
 	if err != nil {
 		return ctx.BadRequest(err)
 	}

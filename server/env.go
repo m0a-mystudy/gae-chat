@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/m0a-mystudy/gae-chat/models"
 	"github.com/mjibson/goon"
 
 	"google.golang.org/appengine/urlfetch"
@@ -14,7 +15,6 @@ import (
 	"google.golang.org/appengine"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/m0a-mystudy/gae-chat/models"
 	oauth2 "google.golang.org/api/oauth2/v2"
 
 	"github.com/m0a/goagooglelogin"
@@ -68,7 +68,7 @@ var CreateClaims goagooglelogin.CreateClaimFunction = func(
 }
 
 // GoogleLoginConf is google login config
-var GoogleLoginConf goagooglelogin.GoaGloginConf = goagooglelogin.GoaGloginConf{
+var GoogleLoginConf = goagooglelogin.GoaGloginConf{
 	LoginURL:           "/login",
 	CallbackURL:        "/oauth2callback",
 	StateSigned:        "xs23234sss3333",

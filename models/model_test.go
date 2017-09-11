@@ -11,6 +11,55 @@ import (
 	"google.golang.org/appengine/aetest"
 )
 
+func RunInTesting(t *testing.T, f func(m *Model, t *testing.T) error) {
+	m, done, err := TestContext()
+	if err != nil {
+		t.Fatalf("Could not start aetest - %v", err)
+	}
+	defer done()
+	err = f(m, t)
+	if err != nil {
+		t.Fatalf("err - %v", err)
+	}
+
+}
+func TestPostRoom(t *testing.T) {
+	RunInTesting(t, func(m *Model, t *testing.T) error {
+		_, err := m.PostRoom("sampleRoom", "sampleRoomDescription")
+		if err != nil {
+			t.Fatalf("Post Room err - %v", err)
+			return err
+		}
+		return nil
+	})
+}
+
+func TestRooms(t *testing.T) {
+	RunInTesting(t, func(m *Model, t *testing.T) error {
+
+		err := m.RunInTransaction(func(tg *Model) error {
+			_, err := m.PostRoom("s1", "desc1")
+			if err != nil {
+				return err
+			}
+			_, err = m.PostRoom("s2", "desc2")
+			if err != nil {
+				return err
+			}
+			rooms, err := m.Rooms(0, 100)
+			if err != nil {
+				return err
+			}
+			fmt.Printf("%#v\n", rooms)
+			return err
+		}, nil)
+
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+}
 func TestLoginModel(t *testing.T) {
 	c, done, err := aetest.NewContext()
 	if err != nil {
@@ -33,9 +82,8 @@ func TestLoginModel(t *testing.T) {
 
 	fmt.Println("key", key)
 
-	var logins []*Login
-
-	_, err = g.GetAll(datastore.NewQuery("login"), &logins)
+	logins := []Login{}
+	_, err = g.GetAll(datastore.NewQuery("Login"), &logins)
 	if err != nil {
 		t.Fail()
 	}

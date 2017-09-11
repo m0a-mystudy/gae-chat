@@ -81,10 +81,9 @@ func MountMessageController(service *goa.Service, ctrl MessageController) {
 		}
 		return ctrl.Post(rctx)
 	}
-	h = handleSecurity("jwt", h, "api:access")
 	h = handleMessageOrigin(h)
 	service.Mux.Handle("POST", "/api/rooms/:name/messages", ctrl.MuxHandler("post", h, unmarshalPostMessagePayload))
-	service.LogInfo("mount", "ctrl", "Message", "action", "Post", "route", "POST /api/rooms/:name/messages", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Message", "action", "Post", "route", "POST /api/rooms/:name/messages")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -135,7 +134,6 @@ func unmarshalPostMessagePayload(ctx context.Context, service *goa.Service, req 
 	if err := service.DecodeRequest(req, payload); err != nil {
 		return err
 	}
-	payload.Finalize()
 	if err := payload.Validate(); err != nil {
 		// Initialize payload with private data structure so it can be logged
 		goa.ContextRequest(ctx).Payload = payload
@@ -194,10 +192,9 @@ func MountRoomController(service *goa.Service, ctrl RoomController) {
 		}
 		return ctrl.Post(rctx)
 	}
-	h = handleSecurity("jwt", h, "api:access")
 	h = handleRoomOrigin(h)
 	service.Mux.Handle("POST", "/api/rooms", ctrl.MuxHandler("post", h, unmarshalPostRoomPayload))
-	service.LogInfo("mount", "ctrl", "Room", "action", "Post", "route", "POST /api/rooms", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Room", "action", "Post", "route", "POST /api/rooms")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request

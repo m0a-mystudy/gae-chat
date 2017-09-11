@@ -18,35 +18,30 @@ import (
 
 // messagePayload user type.
 type messagePayload struct {
-	Body         *string    `form:"body,omitempty" json:"body,omitempty" xml:"body,omitempty"`
-	GoogleUserID *string    `form:"googleUserID,omitempty" json:"googleUserID,omitempty" xml:"googleUserID,omitempty"`
-	PostDate     *time.Time `form:"postDate,omitempty" json:"postDate,omitempty" xml:"postDate,omitempty"`
-}
-
-// Finalize sets the default values for messagePayload type instance.
-func (ut *messagePayload) Finalize() {
-	var defaultPostDate, _ = time.Parse(time.RFC3339, "1978-06-30T10:00:00+09:00")
-	if ut.PostDate == nil {
-		ut.PostDate = &defaultPostDate
-	}
+	Auther  *string    `form:"auther,omitempty" json:"auther,omitempty" xml:"auther,omitempty"`
+	Content *string    `form:"content,omitempty" json:"content,omitempty" xml:"content,omitempty"`
+	Created *time.Time `form:"created,omitempty" json:"created,omitempty" xml:"created,omitempty"`
 }
 
 // Validate validates the messagePayload type instance.
 func (ut *messagePayload) Validate() (err error) {
-	if ut.Body == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "body"))
+	if ut.Content == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "content"))
 	}
-	if ut.PostDate == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "postDate"))
+	if ut.Auther == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "auther"))
 	}
-	if ut.Body != nil {
-		if utf8.RuneCountInString(*ut.Body) < 1 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`request.body`, *ut.Body, utf8.RuneCountInString(*ut.Body), 1, true))
+	if ut.Created == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "created"))
+	}
+	if ut.Content != nil {
+		if utf8.RuneCountInString(*ut.Content) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`request.content`, *ut.Content, utf8.RuneCountInString(*ut.Content), 1, true))
 		}
 	}
-	if ut.Body != nil {
-		if utf8.RuneCountInString(*ut.Body) > 400 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`request.body`, *ut.Body, utf8.RuneCountInString(*ut.Body), 400, false))
+	if ut.Content != nil {
+		if utf8.RuneCountInString(*ut.Content) > 400 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`request.content`, *ut.Content, utf8.RuneCountInString(*ut.Content), 400, false))
 		}
 	}
 	return
@@ -55,36 +50,39 @@ func (ut *messagePayload) Validate() (err error) {
 // Publicize creates MessagePayload from messagePayload
 func (ut *messagePayload) Publicize() *MessagePayload {
 	var pub MessagePayload
-	if ut.Body != nil {
-		pub.Body = *ut.Body
+	if ut.Auther != nil {
+		pub.Auther = *ut.Auther
 	}
-	if ut.GoogleUserID != nil {
-		pub.GoogleUserID = ut.GoogleUserID
+	if ut.Content != nil {
+		pub.Content = *ut.Content
 	}
-	if ut.PostDate != nil {
-		pub.PostDate = *ut.PostDate
+	if ut.Created != nil {
+		pub.Created = *ut.Created
 	}
 	return &pub
 }
 
 // MessagePayload user type.
 type MessagePayload struct {
-	Body         string    `form:"body" json:"body" xml:"body"`
-	GoogleUserID *string   `form:"googleUserID,omitempty" json:"googleUserID,omitempty" xml:"googleUserID,omitempty"`
-	PostDate     time.Time `form:"postDate" json:"postDate" xml:"postDate"`
+	Auther  string    `form:"auther" json:"auther" xml:"auther"`
+	Content string    `form:"content" json:"content" xml:"content"`
+	Created time.Time `form:"created" json:"created" xml:"created"`
 }
 
 // Validate validates the MessagePayload type instance.
 func (ut *MessagePayload) Validate() (err error) {
-	if ut.Body == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "body"))
+	if ut.Content == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "content"))
+	}
+	if ut.Auther == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "auther"))
 	}
 
-	if utf8.RuneCountInString(ut.Body) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`type.body`, ut.Body, utf8.RuneCountInString(ut.Body), 1, true))
+	if utf8.RuneCountInString(ut.Content) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`type.content`, ut.Content, utf8.RuneCountInString(ut.Content), 1, true))
 	}
-	if utf8.RuneCountInString(ut.Body) > 400 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`type.body`, ut.Body, utf8.RuneCountInString(ut.Body), 400, false))
+	if utf8.RuneCountInString(ut.Content) > 400 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`type.content`, ut.Content, utf8.RuneCountInString(ut.Content), 400, false))
 	}
 	return
 }
@@ -110,6 +108,21 @@ func (ut *roomPayload) Validate() (err error) {
 	if ut.Description != nil {
 		if utf8.RuneCountInString(*ut.Description) > 400 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError(`request.description`, *ut.Description, utf8.RuneCountInString(*ut.Description), 400, false))
+		}
+	}
+	if ut.Name != nil {
+		if ok := goa.ValidatePattern(`[a-z|0-9]+`, *ut.Name); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`request.name`, *ut.Name, `[a-z|0-9]+`))
+		}
+	}
+	if ut.Name != nil {
+		if utf8.RuneCountInString(*ut.Name) < 3 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`request.name`, *ut.Name, utf8.RuneCountInString(*ut.Name), 3, true))
+		}
+	}
+	if ut.Name != nil {
+		if utf8.RuneCountInString(*ut.Name) > 20 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`request.name`, *ut.Name, utf8.RuneCountInString(*ut.Name), 20, false))
 		}
 	}
 	return
@@ -150,6 +163,15 @@ func (ut *RoomPayload) Validate() (err error) {
 	}
 	if utf8.RuneCountInString(ut.Description) > 400 {
 		err = goa.MergeErrors(err, goa.InvalidLengthError(`type.description`, ut.Description, utf8.RuneCountInString(ut.Description), 400, false))
+	}
+	if ok := goa.ValidatePattern(`[a-z|0-9]+`, ut.Name); !ok {
+		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.name`, ut.Name, `[a-z|0-9]+`))
+	}
+	if utf8.RuneCountInString(ut.Name) < 3 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`type.name`, ut.Name, utf8.RuneCountInString(ut.Name), 3, true))
+	}
+	if utf8.RuneCountInString(ut.Name) > 20 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`type.name`, ut.Name, utf8.RuneCountInString(ut.Name), 20, false))
 	}
 	return
 }

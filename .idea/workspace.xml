@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e1ad06a7-3d9e-4397-b751-1bf7230d2287" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/go.imports.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gae-chat-client-api/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gae-chat-client-api/.swagger-codegen-ignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gae-chat-client-api/.swagger-codegen/VERSION" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gae-chat-client-api/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gae-chat-client-api/api.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gae-chat-client-api/git_push.sh" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gae-chat-client-api/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gae-chat-client-api/tsconfig.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gae-chat-client-api/tslint.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gae-chat-client-api/typings.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/contexts.go" afterPath="$PROJECT_DIR$/app/contexts.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers.go" afterPath="$PROJECT_DIR$/app/controllers.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/media_types.go" afterPath="$PROJECT_DIR$/app/media_types.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/test/message_testing.go" afterPath="$PROJECT_DIR$/app/test/message_testing.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/user_types.go" afterPath="$PROJECT_DIR$/app/user_types.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/message.go" afterPath="$PROJECT_DIR$/controllers/message.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design/design.go" afterPath="$PROJECT_DIR$/design/design.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/app.yaml" afterPath="$PROJECT_DIR$/server/app.yaml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/env.go" afterPath="$PROJECT_DIR$/server/env.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/main.go" afterPath="$PROJECT_DIR$/server/main.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/swagger/swagger.json" afterPath="$PROJECT_DIR$/swagger/swagger.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/swagger/swagger.yaml" afterPath="$PROJECT_DIR$/swagger/swagger.yaml" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="contexts.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/contexts.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="hrefs.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/hrefs.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="room.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/controllers/room.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="19" column="21" lean-forward="true" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app.yaml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/app.yaml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="10" column="3" lean-forward="false" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.go" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/server/main.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="env.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/env.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-215">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <element signature="e#16#296#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>_MAX_MONITORED_FILES</find>
+      <find>followlinks</find>
+      <find>_skip_files_re</find>
+      <find>ski</find>
+      <find>_watcher_ignore_re</find>
+    </findStrings>
+  </component>
+  <component name="GOROOT" path="/usr/local/Cellar/app-engine-go-64/1.9.57/share/app-engine-go-64/goroot-1.8" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/server/app.yaml" />
+        <option value="/usr/local/Cellar/app-engine-go-64/1.9.57/share/app-engine-go-64/google/appengine/tools/devappserver2/mtime_file_watcher.py" />
+        <option value="$PROJECT_DIR$/env.go" />
+        <option value="$PROJECT_DIR$/server/env.go" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="y" value="23" />
+    <option name="width" value="1680" />
+    <option name="height" value="1023" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="gae-chat" type="b2602c69:ProjectViewProjectNode" />
+              <item name="gae-chat" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="gae-chat" type="b2602c69:ProjectViewProjectNode" />
+              <item name="gae-chat" type="462c0819:PsiDirectoryNode" />
+              <item name="controllers" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="gae-chat" type="b2602c69:ProjectViewProjectNode" />
+              <item name="gae-chat" type="462c0819:PsiDirectoryNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scratches" />
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <expand>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="gae-chat" type="cbb8eebc:String" user="gae-chat" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="http.certificates" />
+    <property name="configurable.Global.GOPATH.is.expanded" value="true" />
+    <property name="configurable.Project.GOPATH.is.expanded" value="true" />
+    <property name="configurable.Module.GOPATH.is.expanded" value="false" />
+    <property name="nodejs_interpreter_path" value="$USER_HOME$/.anyenv/envs/ndenv/shims/node" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/server" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Go Test.controller test">
+    <configuration default="true" type="GoAppEngineRunConfiguration" factoryName="Go App Engine">
+      <module name="gae-chat" />
+      <working_directory value="$PROJECT_DIR$" />
+      <HOST value="localhost" />
+      <PORT value="9991" />
+      <ADMIN_PORT value="9999" />
+      <CONFIG value="$PROJECT_DIR$/server/app.yaml" />
+    </configuration>
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="gae-chat" />
+      <working_directory value="$PROJECT_DIR$" />
+      <go_parameters value="-i" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$" />
+      <package value="github.com/m0a-mystudy/gae-chat" />
+      <directory value="$PROJECT_DIR$" />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="gae-chat" />
+      <working_directory value="$PROJECT_DIR$" />
+      <go_parameters value="-i" />
+      <framework value="gotest" />
+      <kind value="DIRECTORY" />
+      <package value="github.com/m0a-mystudy/gae-chat" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+    </configuration>
+    <configuration name="controller test" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="gae-chat" />
+      <working_directory value="$PROJECT_DIR$" />
+      <go_parameters value="-i" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/m0a-mystudy/gae-chat/controllers/test" />
+      <directory value="$PROJECT_DIR$/controllers/test" />
+      <filePath value="$PROJECT_DIR$" />
+    </configuration>
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="Go App Engine.Unnamed" />
+      <item index="1" class="java.lang.String" itemvalue="Go Test.controller test" />
+    </list>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="Unnamed - 2017.09.11 at 10h 36m 05s.xml">
+      <configuration name="Unnamed" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="Unnamed - 2017.09.11 at 10h 37m 19s.xml">
+      <configuration name="Unnamed" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="Unnamed - 2017.09.11 at 10h 38m 25s.xml">
+      <configuration name="Unnamed" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="controller_test - 2017.09.11 at 10h 39m 05s.xml">
+      <configuration name="controller test" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="controller_test - 2017.09.11 at 10h 39m 42s.xml">
+      <configuration name="controller test" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="23" width="1680" height="1023" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.40892857" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32912722" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file:///usr/local/Cellar/app-engine-go-64/1.9.57/share/app-engine-go-64/google/appengine/tools/devappserver2/mtime_file_watcher.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="24" lean-forward="false" selection-start-line="24" selection-start-column="24" selection-end-line="24" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/contexts.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/hrefs.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/room.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="19" column="21" lean-forward="true" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/app.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="3" lean-forward="false" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/env.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-215">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#16#296#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

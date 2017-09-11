@@ -13,7 +13,7 @@ var JWT = JWTSecurity("jwt", func() {
 var _ = API("GAE Chat API", func() {
 	Title("goa study chat") // Documentation title
 	Description("goa study chat api")
-	Host("localhost:8080")
+	Host("localhost:9089")
 	Scheme("http")
 	BasePath("/api")
 	Origin("http://test.com:3000", func() {
@@ -64,9 +64,9 @@ var _ = Resource("room", func() {
 		Routing(POST(""))
 		Description("Create new Room")
 		Payload(RoomPayload)
-		Security(JWT, func() {
-			Scope("api:access")
-		})
+		// Security(JWT, func() {
+		// 	Scope("api:access")
+		// })
 
 		Response(Created, "/rooms/[0-9]+")
 		Response(BadRequest, ErrorMedia)
@@ -99,15 +99,15 @@ var _ = Resource("message", func() {
 			Param("offset", Integer)
 		})
 
-		Response(OK, CollectionOf(MessageWithAccount))
+		Response(OK, CollectionOf(Message))
 		Response(NotFound)
 	})
 	Action("post", func() {
 		Routing(POST(""))
 		Description("Create new message")
-		Security(JWT, func() {
-			Scope("api:access")
-		})
+		// Security(JWT, func() {
+		// 	Scope("api:access")
+		// })
 
 		Payload(MessagePayload)
 		Response(Created, "^/rooms/[0-9]+/messages/[0-9]+$")
@@ -161,59 +161,32 @@ var _ = Resource("message", func() {
 
 // })
 
-var MessageWithAccount = MediaType("application/vnd.message_with_account+json", func() {
-	Description("A Message with account")
-
+var Message = MediaType("application/vnd.message+json", func() {
+	Description("A Message")
 	Attributes(func() {
 		Attribute("id", Integer)
-		Attribute("body", String)
-		Attribute("postDate", DateTime)
-		Attribute("name", String)
-		Attribute("email", String)
-		Attribute("googleUserID", String)
-		Attribute("image", String)
+		Attribute("content", String, func() {
+			MinLength(1)
+			MaxLength(400)
+		})
+		Attribute("auther", String)
+		Attribute("created", DateTime)
+
+		Required("id", "content", "auther", "created")
 	})
 	View("default", func() {
 		Attribute("id")
-		Attribute("body")
-		Attribute("postDate")
-		Attribute("name")
-		Attribute("email")
-		Attribute("googleUserID")
-		Attribute("image")
-	})
-})
-
-var Message = MediaType("application/vnd.message+json", func() {
-	Description("A Message")
-	Reference(MessagePayload)
-	Attributes(func() {
-		Attribute("googleUserID")
-		Attribute("body")
-		Attribute("postDate")
-		Required("googleUserID", "body", "postDate")
-	})
-	View("default", func() {
-		Attribute("googleUserID")
-		Attribute("body")
-		Attribute("postDate")
+		Attribute("auther")
+		Attribute("content")
+		Attribute("created")
 	})
 })
 var MessagePayload = Type("MessagePayload", func() {
-
-	Attribute("googleUserID", String, func() {
-		Example("12345678")
-	})
-	Attribute("body", func() {
-		MinLength(1)
-		MaxLength(400)
-		Example("this is chat message")
-	})
-	Attribute("postDate", DateTime, func() {
-		Default("1978-06-30T10:00:00+09:00")
-	})
-
-	Required("body", "postDate")
+	Reference(Message)
+	Attribute("content")
+	Attribute("auther")
+	Attribute("created")
+	Required("content", "auther", "created")
 })
 
 var Room = MediaType("application/vnd.room+json", func() {
@@ -236,6 +209,10 @@ var Room = MediaType("application/vnd.room+json", func() {
 var RoomPayload = Type("RoomPayload", func() {
 	Attribute("name", String, "Name of room", func() {
 		Example("room001")
+		Pattern("[a-z|0-9]+")
+		MinLength(3)
+		MaxLength(20)
+
 	})
 	Attribute("description", String, "description of room", func() {
 		Example("room description")
