@@ -215,7 +215,11 @@ paths:
       tags:
       - room
     post:
-      description: Create new Room
+      description: |-
+        Create new Room
+
+        Required security scopes:
+          * `api:access`
       operationId: room#post
       parameters:
       - in: body
@@ -237,8 +241,13 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
       schemes:
       - http
+      security:
+      - jwt:
+        - api:access
       summary: post room
       tags:
       - room
@@ -310,7 +319,11 @@ paths:
       tags:
       - message
     post:
-      description: Create new message
+      description: |-
+        Create new message
+
+        Required security scopes:
+          * `api:access`
       operationId: message#post
       parameters:
       - description: Name of room
@@ -336,8 +349,13 @@ paths:
               type: string
         "400":
           description: Bad Request
+        "401":
+          description: Unauthorized
       schemes:
       - http
+      security:
+      - jwt:
+        - api:access
       summary: post message
       tags:
       - message
@@ -391,6 +409,8 @@ responses:
     description: OK
     schema:
       $ref: '#/definitions/Message'
+  Unauthorized:
+    description: Unauthorized
 schemes:
 - http
 securityDefinitions:

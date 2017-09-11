@@ -138,6 +138,12 @@ func (ctx *PostMessageContext) BadRequest() error {
 	return nil
 }
 
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *PostMessageContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
 // ShowMessageContext provides the message show action context.
 type ShowMessageContext struct {
 	context.Context
@@ -288,6 +294,12 @@ func (ctx *PostRoomContext) Created() error {
 func (ctx *PostRoomContext) BadRequest(r error) error {
 	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
 	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *PostRoomContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
 }
 
 // ShowRoomContext provides the room show action context.

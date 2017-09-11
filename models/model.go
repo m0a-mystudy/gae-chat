@@ -68,16 +68,20 @@ type Writer interface {
 	PostLogin(googleUserID, email, name string, picture []byte) (*datastore.Key, error)
 }
 
+type ReadWriter interface {
+	Reader
+	Writer
+}
+
 type Model struct {
 	*goon.Goon
 	goaContext       context.Context
 	appEngineContext context.Context
 }
 
-var _ Reader = &Model{}
-var _ Writer = &Model{}
+var _ ReadWriter = &Model{}
 
-func New(ctx context.Context) *Model {
+func New(ctx context.Context) ReadWriter {
 	r := goa.ContextRequest(ctx).Request
 	a := appengine.NewContext(r)
 	g := goon.FromContext(a)
@@ -88,7 +92,7 @@ func New(ctx context.Context) *Model {
 	}
 }
 
-func FromAppEngineCTX(ctx context.Context) *Model {
+func FromAppEngineCTX(ctx context.Context) ReadWriter {
 	g := goon.FromContext(ctx)
 	return &Model{
 		Goon:             g,
@@ -98,7 +102,7 @@ func FromAppEngineCTX(ctx context.Context) *Model {
 }
 
 // TestContext is testTool
-func TestContext() (*Model, func(), error) {
+func TestContext() (ReadWriter, func(), error) {
 	c, done, err := aetest.NewContext()
 
 	if err != nil {

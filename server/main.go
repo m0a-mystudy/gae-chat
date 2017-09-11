@@ -9,6 +9,7 @@ import (
 	"github.com/goadesign/goa/middleware"
 	"github.com/m0a-mystudy/gae-chat/app"
 	"github.com/m0a-mystudy/gae-chat/controllers"
+	"github.com/m0a-mystudy/gae-chat/models"
 	"github.com/m0a/goagooglelogin"
 )
 
@@ -24,7 +25,7 @@ func init() {
 	// google login
 	service.Use(goagooglelogin.WithConfig(service, &GoogleLoginConf))
 	app.UseJWTMiddleware(service, goagooglelogin.NewJWTMiddleware(&GoogleLoginConf, app.NewJWTSecurity()))
-
+	service.Context = models.WithModel(service.Context, models.FromAppEngineCTX(service.Context))
 	// Mount "hello" controller
 	// c := controller.NewHelloController(service)
 	// app.MountHelloController(service, c)

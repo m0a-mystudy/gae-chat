@@ -64,10 +64,11 @@ var _ = Resource("room", func() {
 		Routing(POST(""))
 		Description("Create new Room")
 		Payload(RoomPayload)
-		// Security(JWT, func() {
-		// 	Scope("api:access")
-		// })
+		Security(JWT, func() {
+			Scope("api:access")
+		})
 
+		Response(Unauthorized)
 		Response(Created, "/rooms/[0-9]+")
 		Response(BadRequest, ErrorMedia)
 	})
@@ -105,11 +106,12 @@ var _ = Resource("message", func() {
 	Action("post", func() {
 		Routing(POST(""))
 		Description("Create new message")
-		// Security(JWT, func() {
-		// 	Scope("api:access")
-		// })
+		Security(JWT, func() {
+			Scope("api:access")
+		})
 
 		Payload(MessagePayload)
+		Response(Unauthorized)
 		Response(Created, "^/rooms/[0-9]+/messages/[0-9]+$")
 		Response(BadRequest)
 	})

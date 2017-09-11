@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	jwtgo "github.com/dgrijalva/jwt-go"
 	"github.com/goadesign/goa"
+	"github.com/goadesign/goa/middleware/security/jwt"
 	"github.com/m0a-mystudy/gae-chat/app"
 	"github.com/m0a-mystudy/gae-chat/models"
 )
@@ -13,12 +15,11 @@ type MessageController struct {
 
 // ToMessageCollectionMedia is translater
 func ToMessageCollectionMedia(m []*models.Message) *app.MessageCollection {
-	// res := make(app.MessageCollection, len(m))
-	// for _, v := range m {
-	// 	res = append(res, ToMessageMedia(v))
-	// }
-	// return &res
-	return nil
+	res := app.MessageCollection{}
+	for _, v := range m {
+		res = append(res, ToMessageMedia(v))
+	}
+	return &res
 }
 
 // ToMessageMedia is translater from models to app
@@ -38,34 +39,55 @@ func NewMessageController(service *goa.Service) *MessageController {
 
 // List runs the list action.
 func (c *MessageController) List(ctx *app.ListMessageContext) error {
-	// room := &models.Room{
-	// 	Name: ctx.Name,
-	// }
-	// g := models.Goon(ctx)
-	// query := datastore.NewQuery("Message").Ancestor(g.Key(room))
 
-	// var res []*models.Message
-	// g.GetAll(query, res)
+	IfNil := func(num *int, d int) int {
+		if num != nil {
+			return *num
+		}
+		return d
+	}
+
+	limit := IfNil(ctx.Limit, 100)
+	offset := IfNil(ctx.Offset, 0)
+
+	m := models.New(ctx)
+	mes, err := m.Messages(ctx.Name, offset, limit)
+	if err != nil {
+		goa.LogError(ctx, "msg", "error", err.Error())
+		return ctx.NotFound()
+	}
 
 	// // res := app.MessageWithAccountCollection{}
-	// list := ToMessageCollectionMedia(res)
-	// return ctx.OK(*list)
-	return nil
+	list := ToMessageCollectionMedia(mes)
+	return ctx.OK(*list)
+
 }
 
 // Post runs the post action.
 func (c *MessageController) Post(ctx *app.PostMessageContext) error {
-	// /ctx.Payload.
+	m := models.New(ctx)
+	jwtContext := jwt.ContextJWT(ctx)
+	claims, ok := jwtContext.Claims.(jwtgo.MapClaims)
+	if !ok {
+		return ctx.Unauthorized()
+	}
+	googleID, ok := claims["sub"].(string)
+	if !ok {
+		return ctx.Unauthorized()
+	}
+
+	// TODO set google userID
+	m.PostMessage(ctx.Name, googleID, ctx.Payload.Content)
 	return nil
 }
 
 // Show runs the show action.
 func (c *MessageController) Show(ctx *app.ShowMessageContext) error {
-	// MessageController_Show: start_implement
-
-	// Put your logic here
-
-	// MessageController_Show: end_implement
-	res := &app.Message{}
-	return ctx.OK(res)
+	m := models.New(ctx)
+	mes, err := m.Message(ctx.Name, int64(ctx.MessageID))
+	if err != nil {
+		goa.LogError(ctx, "msg", "error", err.Error())
+		return ctx.NotFound()
+	}
+	return ctx.OK(ToMessageMedia(mes))
 }
