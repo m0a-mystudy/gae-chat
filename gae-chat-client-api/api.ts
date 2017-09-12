@@ -19,7 +19,7 @@ import * as assign from "core-js/library/fn/object/assign";
 interface Dictionary<T> { [index: string]: T; }
 export interface FetchAPI { (url: string, init?: any): Promise<any>; }
 
-const BASE_PATH = "http://localhost:8080/api".replace(/\/+$/, "");
+const BASE_PATH = "http://localhost:9089/api".replace(/\/+$/, "");
 
 export interface FetchArgs {
     url: string;
@@ -66,34 +66,22 @@ export interface Error {
  * A Message (default view)
  */
 export interface Message {
-    "body": string;
-    "googleUserID": string;
-    "postDate": Date;
+    "auther": string;
+    "content": string;
+    "created": Date;
+    "id": number;
+}
+
+/**
+ * MessageCollection is the media type for an array of Message (default view)
+ */
+export interface MessageCollection extends Array<Message> {
 }
 
 export interface MessagePayload {
-    "body": string;
-    "googleUserID"?: string;
-    "postDate": Date;
-}
-
-/**
- * A Message with account (default view)
- */
-export interface MessageWithAccount {
-    "body"?: string;
-    "email"?: string;
-    "googleUserID"?: string;
-    "id"?: number;
-    "image"?: string;
-    "name"?: string;
-    "postDate"?: Date;
-}
-
-/**
- * Message_with_accountCollection is the media type for an array of Message_with_account (default view)
- */
-export interface MessageWithAccountCollection extends Array<MessageWithAccount> {
+    "auther": string;
+    "content": string;
+    "created": Date;
 }
 
 /**
@@ -247,7 +235,7 @@ export const MessageApiFp = {
      * @param limit 
      * @param offset 
      */
-    messageList(params: { "name": string; "limit"?: number; "offset"?: number;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<MessageWithAccountCollection> {
+    messageList(params: { "name": string; "limit"?: number; "offset"?: number;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<MessageCollection> {
         const fetchArgs = MessageApiFetchParamCreator.messageList(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {

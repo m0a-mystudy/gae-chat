@@ -21,7 +21,7 @@ delete:
 REPO:=github.com/m0a-mystudy/gae-chat
 GAE_PROJECT:=gaechatx
 PORT:=9089
-
+CLIENTAPI:=gae-chat-client-api
 
 init:  bootstrap 
 gen: clean generate 
@@ -47,7 +47,12 @@ generate:
 	@goagen app     -d $(REPO)/design
 	@goagen swagger -d $(REPO)/design
 	@goagen controller --pkg controllers -d $(REPO)/design -o controllers
-# @goagen client  -d $(REPO)/design
+
+codegen: 
+	@swagger-codegen generate -l typescript-fetch  -i ./swagger/swagger.json  -o ./$(CLIENTAPI)
+	@jq -s '.[0] * .[1]' $(CLIENTAPI)/package.json $(CLIENTAPI)/package_replace.json > replaced_package.json
+	@rm $(CLIENTAPI)/package.json
+	@mv replaced_package.json $(CLIENTAPI)/package.json
 
 deploy:
 	goapp deploy -application $(GAE_PROJECT) ./server
