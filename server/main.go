@@ -6,13 +6,14 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/m0a/goagooglelogin"
+
 	"github.com/m0a-mystudy/gae-chat/models"
 
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
 	"github.com/m0a-mystudy/gae-chat/app"
 	"github.com/m0a-mystudy/gae-chat/controllers"
-	"github.com/m0a/goagooglelogin"
 )
 
 func init() {
@@ -24,19 +25,17 @@ func init() {
 	service.Use(middleware.LogRequest(true))
 	service.Use(middleware.ErrorHandler(service, true))
 	service.Use(middleware.Recover())
-	// google login
-	service.Use(goagooglelogin.WithConfig(service, &GoogleLoginConf))
-	// app.UseJWTMiddleware(service, goagooglelogin.NewJWTMiddleware(&GoogleLoginConf, app.NewJWTSecurity()))
 	service.Use(models.Middleware(func(ctx context.Context) models.LoadSaver {
 		return models.New(ctx)
 	}))
 
-	// Mount "hello" controller
-	// c := controller.NewHelloController(service)
-	// app.MountHelloController(service, c)
+	app.UseJWTMiddleware(service, goagooglelogin.NewJWTMiddleware(&GoogleLoginConf, app.NewJWTSecurity()))
+	goagooglelogin.MountControllerWithConfig(service, &GoogleLoginConf)
+
 	// Mount "message" controller
 	c := controllers.NewMessageController(service)
 	app.MountMessageController(service, c)
+
 	// Mount "room" controller
 	c2 := controllers.NewRoomController(service)
 	app.MountRoomController(service, c2)

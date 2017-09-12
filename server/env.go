@@ -1,9 +1,9 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"time"
 
@@ -11,8 +11,6 @@ import (
 	"github.com/mjibson/goon"
 
 	"google.golang.org/appengine/urlfetch"
-
-	"google.golang.org/appengine"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	oauth2 "google.golang.org/api/oauth2/v2"
@@ -25,11 +23,10 @@ var CreateClaims goagooglelogin.CreateClaimFunction = func(
 	googleUserID string,
 	userinfo *oauth2.Userinfoplus,
 	tokenInfo *oauth2.Tokeninfo,
-	req *http.Request,
+	ctx context.Context,
 ) (jwt.Claims, error) {
 
-	appCtx := appengine.NewContext(req)
-	client := urlfetch.Client(appCtx)
+	client := urlfetch.Client(ctx)
 	resp, err := client.Get(userinfo.Picture)
 	if err != nil {
 		return nil, err
@@ -46,7 +43,7 @@ var CreateClaims goagooglelogin.CreateClaimFunction = func(
 		GoogleLoginID: googleUserID,
 	}
 
-	g := goon.FromContext(appCtx)
+	g := goon.FromContext(ctx)
 	err = g.Get(login)
 	if err != nil {
 		newLogin := &models.Login{
