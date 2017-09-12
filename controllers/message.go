@@ -39,7 +39,7 @@ func NewMessageController(service *goa.Service) *MessageController {
 
 // List runs the list action.
 func (c *MessageController) List(ctx *app.ListMessageContext) error {
-
+	m := models.ContextModel(ctx)
 	IfNil := func(num *int, d int) int {
 		if num != nil {
 			return *num
@@ -50,7 +50,6 @@ func (c *MessageController) List(ctx *app.ListMessageContext) error {
 	limit := IfNil(ctx.Limit, 100)
 	offset := IfNil(ctx.Offset, 0)
 
-	m := models.New(ctx)
 	mes, err := m.Messages(ctx.Name, offset, limit)
 	if err != nil {
 		goa.LogError(ctx, "msg", "error", err.Error())
@@ -65,7 +64,7 @@ func (c *MessageController) List(ctx *app.ListMessageContext) error {
 
 // Post runs the post action.
 func (c *MessageController) Post(ctx *app.PostMessageContext) error {
-	m := models.New(ctx)
+	m := models.ContextModel(ctx)
 	jwtContext := jwt.ContextJWT(ctx)
 	claims, ok := jwtContext.Claims.(jwtgo.MapClaims)
 	if !ok {
@@ -83,7 +82,7 @@ func (c *MessageController) Post(ctx *app.PostMessageContext) error {
 
 // Show runs the show action.
 func (c *MessageController) Show(ctx *app.ShowMessageContext) error {
-	m := models.New(ctx)
+	m := models.ContextModel(ctx)
 	mes, err := m.Message(ctx.Name, int64(ctx.MessageID))
 	if err != nil {
 		goa.LogError(ctx, "msg", "error", err.Error())

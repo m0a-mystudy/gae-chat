@@ -3,13 +3,15 @@
 package server
 
 import (
+	"context"
 	"net/http"
+
+	"github.com/m0a-mystudy/gae-chat/models"
 
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
 	"github.com/m0a-mystudy/gae-chat/app"
 	"github.com/m0a-mystudy/gae-chat/controllers"
-	"github.com/m0a-mystudy/gae-chat/models"
 	"github.com/m0a/goagooglelogin"
 )
 
@@ -24,8 +26,11 @@ func init() {
 	service.Use(middleware.Recover())
 	// google login
 	service.Use(goagooglelogin.WithConfig(service, &GoogleLoginConf))
-	app.UseJWTMiddleware(service, goagooglelogin.NewJWTMiddleware(&GoogleLoginConf, app.NewJWTSecurity()))
-	service.Context = models.WithModel(service.Context, models.FromAppEngineCTX(service.Context))
+	// app.UseJWTMiddleware(service, goagooglelogin.NewJWTMiddleware(&GoogleLoginConf, app.NewJWTSecurity()))
+	service.Use(models.Middleware(func(ctx context.Context) models.LoadSaver {
+		return models.New(ctx)
+	}))
+
 	// Mount "hello" controller
 	// c := controller.NewHelloController(service)
 	// app.MountHelloController(service, c)

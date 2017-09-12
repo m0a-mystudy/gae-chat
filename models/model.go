@@ -46,9 +46,10 @@ type Tag struct {
 	Count int64
 }
 
-// Goon is return context
-
-type Reader interface {
+// type Initializer interface {
+// 	SetContext(goaCTX context.Context)
+// }
+type Loader interface {
 	Rooms(offset, limit int) ([]*Room, error)
 	Room(name string) (*Room, error)
 
@@ -58,7 +59,7 @@ type Reader interface {
 	Login(googleUserID string) (*Login, error)
 }
 
-type Writer interface {
+type Saver interface {
 	RunInTransaction(f func(tg *Model) error, opts *datastore.TransactionOptions) error
 
 	PostRoom(name, description string) (*datastore.Key, error)
@@ -68,9 +69,10 @@ type Writer interface {
 	PostLogin(googleUserID, email, name string, picture []byte) (*datastore.Key, error)
 }
 
-type ReadWriter interface {
-	Reader
-	Writer
+type LoadSaver interface {
+	// Initializer
+	Loader
+	Saver
 }
 
 type Model struct {
@@ -79,9 +81,9 @@ type Model struct {
 	appEngineContext context.Context
 }
 
-var _ ReadWriter = &Model{}
+var _ LoadSaver = &Model{}
 
-func New(ctx context.Context) ReadWriter {
+func New(ctx context.Context) LoadSaver {
 	r := goa.ContextRequest(ctx).Request
 	a := appengine.NewContext(r)
 	g := goon.FromContext(a)
@@ -92,7 +94,7 @@ func New(ctx context.Context) ReadWriter {
 	}
 }
 
-func FromAppEngineCTX(ctx context.Context) ReadWriter {
+func FromAppEngineCTX(ctx context.Context) LoadSaver {
 	g := goon.FromContext(ctx)
 	return &Model{
 		Goon:             g,
@@ -102,7 +104,7 @@ func FromAppEngineCTX(ctx context.Context) ReadWriter {
 }
 
 // TestContext is testTool
-func TestContext() (ReadWriter, func(), error) {
+func TestContext() (LoadSaver, func(), error) {
 	c, done, err := aetest.NewContext()
 
 	if err != nil {

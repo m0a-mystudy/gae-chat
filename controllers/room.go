@@ -49,7 +49,7 @@ func (c *RoomController) List(ctx *app.ListRoomContext) error {
 	limit := IfNil(ctx.Limit, 100)
 	offset := IfNil(ctx.Offset, 0)
 
-	m := models.New(ctx)
+	m := models.ContextModel(ctx)
 	rooms, err := m.Rooms(offset, limit)
 	if err != nil {
 		goa.LogError(ctx, "msg", "error", err.Error())
@@ -67,7 +67,7 @@ func (c *RoomController) List(ctx *app.ListRoomContext) error {
 // Post runs the post action.
 func (c *RoomController) Post(ctx *app.PostRoomContext) error {
 
-	m := models.New(ctx)
+	m := models.ContextModel(ctx)
 	key, err := m.PostRoom(ctx.Payload.Name, ctx.Payload.Description)
 	if err != nil {
 		goa.LogError(ctx, "msg", "error", err.Error())
@@ -81,7 +81,7 @@ func (c *RoomController) Post(ctx *app.PostRoomContext) error {
 // Show runs the show action.
 func (c *RoomController) Show(ctx *app.ShowRoomContext) error {
 
-	m := models.New(ctx)
+	m := models.ContextModel(ctx)
 	room, err := m.Room(ctx.Name)
 
 	if err != nil {
