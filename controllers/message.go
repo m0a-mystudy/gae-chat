@@ -13,25 +13,6 @@ type MessageController struct {
 	*goa.Controller
 }
 
-// ToMessageCollectionMedia is translater
-func ToMessageCollectionMedia(m []*models.Message) *app.MessageCollection {
-	res := app.MessageCollection{}
-	for _, v := range m {
-		res = append(res, ToMessageMedia(v))
-	}
-	return &res
-}
-
-// ToMessageMedia is translater from models to app
-func ToMessageMedia(m *models.Message) *app.Message {
-	return &app.Message{
-		ID:      int(m.ID),
-		Auther:  m.Auther.String(),
-		Content: m.Content,
-		Created: m.Created,
-	}
-}
-
 // NewMessageController creates a message controller.
 func NewMessageController(service *goa.Service) *MessageController {
 	return &MessageController{Controller: service.NewController("MessageController")}
@@ -57,7 +38,7 @@ func (c *MessageController) List(ctx *app.ListMessageContext) error {
 	}
 
 	// // res := app.MessageWithAccountCollection{}
-	list := ToMessageCollectionMedia(mes)
+	list := m.ToMessageCollectionMedia(mes)
 	return ctx.OK(*list)
 
 }
@@ -88,5 +69,5 @@ func (c *MessageController) Show(ctx *app.ShowMessageContext) error {
 		goa.LogError(ctx, "msg", "error", err.Error())
 		return ctx.NotFound()
 	}
-	return ctx.OK(ToMessageMedia(mes))
+	return ctx.OK(m.ToMessageMedia(mes))
 }

@@ -77,6 +77,7 @@ type LoadSaver interface {
 	// Initializer
 	Loader
 	Saver
+	Converter
 }
 
 type Model struct {
@@ -205,7 +206,7 @@ func (m *Model) Message(roomName string, messageID int64) (*Message, error) {
 
 func (m *Model) Messages(roomName string, offset, limit int) ([]*Message, error) {
 	var messages []*Message
-	query := datastore.NewQuery("Message").Ancestor(m.RoomKey(roomName))
+	query := datastore.NewQuery("Message").Ancestor(m.RoomKey(roomName)).Order("Created")
 	_, err := m.GetAll(query, &messages)
 	if err != nil {
 		return nil, err
