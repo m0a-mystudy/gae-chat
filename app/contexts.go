@@ -18,6 +18,89 @@ import (
 	"unicode/utf8"
 )
 
+// ShowAccountContext provides the account show action context.
+type ShowAccountContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Ids []string
+}
+
+// NewShowAccountContext parses the incoming request URL and body, performs validations and creates the
+// context used by the account controller show action.
+func NewShowAccountContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowAccountContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ShowAccountContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramIds := req.Params["ids"]
+	if len(paramIds) > 0 {
+		params := paramIds
+		rctx.Ids = params
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowAccountContext) OK(r AccountCollection) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.account+json; type=collection")
+	if r == nil {
+		r = AccountCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ShowAccountContext) BadRequest(r error) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ShowAccountContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// ShowMeAccountContext provides the account showMe action context.
+type ShowMeAccountContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+}
+
+// NewShowMeAccountContext parses the incoming request URL and body, performs validations and creates the
+// context used by the account controller showMe action.
+func NewShowMeAccountContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowMeAccountContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ShowMeAccountContext{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowMeAccountContext) OK(r *Account) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.account+json")
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ShowMeAccountContext) BadRequest(r error) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ShowMeAccountContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
 // ListMessageContext provides the message list action context.
 type ListMessageContext struct {
 	context.Context

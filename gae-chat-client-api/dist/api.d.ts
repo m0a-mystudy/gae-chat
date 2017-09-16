@@ -11,6 +11,20 @@ export declare class BaseAPI {
     constructor(fetch?: FetchAPI, basePath?: string);
 }
 /**
+ * A account (default view)
+ */
+export interface Account {
+    "googleUserID": string;
+    "lastLogin": Date;
+    "name"?: string;
+    "picture": string;
+}
+/**
+ * AccountCollection is the media type for an array of Account (default view)
+ */
+export interface AccountCollection extends Array<Account> {
+}
+/**
  * Error response media type (default view)
  */
 export interface Error {
@@ -90,6 +104,51 @@ export interface RoomPayload {
      */
     "name": string;
 }
+/**
+ * AccountApi - fetch parameter creator
+ */
+export declare const AccountApiFetchParamCreator: {
+    accountShow(params: {
+        "ids"?: string[];
+    }, options?: any): FetchArgs;
+    accountShowMe(options?: any): FetchArgs;
+};
+/**
+ * AccountApi - functional programming interface
+ */
+export declare const AccountApiFp: {
+    accountShow(params: {
+        "ids"?: string[];
+    }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<AccountCollection>;
+    accountShowMe(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Account>;
+};
+/**
+ * AccountApi - object-oriented interface
+ */
+export declare class AccountApi extends BaseAPI {
+    /**
+     * Retrieve account with given id or something
+     * @summary show account
+     * @param ids
+     */
+    accountShow(params: {
+        "ids"?: Array<string>;
+    }, options?: any): Promise<AccountCollection>;
+    /**
+     * Retrieve my account  Required security scopes:   * `api:access`
+     * @summary showMe account
+     */
+    accountShowMe(options?: any): Promise<Account>;
+}
+/**
+ * AccountApi - factory interface
+ */
+export declare const AccountApiFactory: (fetch?: FetchAPI, basePath?: string) => {
+    accountShow(params: {
+        "ids"?: string[];
+    }, options?: any): Promise<AccountCollection>;
+    accountShowMe(options?: any): Promise<Account>;
+};
 /**
  * MessageApi - fetch parameter creator
  */

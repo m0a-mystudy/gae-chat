@@ -31,6 +31,142 @@ var BaseAPI = (function () {
 exports.BaseAPI = BaseAPI;
 ;
 /**
+ * AccountApi - fetch parameter creator
+ */
+exports.AccountApiFetchParamCreator = {
+    /**
+     * Retrieve account with given id or something
+     * @summary show account
+     * @param ids
+     */
+    accountShow: function (params, options) {
+        var baseUrl = "/accounts";
+        var urlObj = url.parse(baseUrl, true);
+        urlObj.query = assign({}, urlObj.query, {
+            "ids": params["ids"],
+        });
+        var fetchOptions = assign({}, { method: "GET" }, options);
+        var contentTypeHeader = {};
+        if (contentTypeHeader) {
+            fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
+        }
+        return {
+            url: url.format(urlObj),
+            options: fetchOptions,
+        };
+    },
+    /**
+     * Retrieve my account  Required security scopes:   * `api:access`
+     * @summary showMe account
+     */
+    accountShowMe: function (options) {
+        var baseUrl = "/accounts/me";
+        var urlObj = url.parse(baseUrl, true);
+        var fetchOptions = assign({}, { method: "GET" }, options);
+        var contentTypeHeader = {};
+        if (contentTypeHeader) {
+            fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
+        }
+        return {
+            url: url.format(urlObj),
+            options: fetchOptions,
+        };
+    },
+};
+/**
+ * AccountApi - functional programming interface
+ */
+exports.AccountApiFp = {
+    /**
+     * Retrieve account with given id or something
+     * @summary show account
+     * @param ids
+     */
+    accountShow: function (params, options) {
+        var fetchArgs = exports.AccountApiFetchParamCreator.accountShow(params, options);
+        return function (fetch, basePath) {
+            if (fetch === void 0) { fetch = isomorphicFetch; }
+            if (basePath === void 0) { basePath = BASE_PATH; }
+            return fetch(basePath + fetchArgs.url, fetchArgs.options).then(function (response) {
+                if (response.status >= 200 && response.status < 300) {
+                    return response.json();
+                }
+                else {
+                    throw response;
+                }
+            });
+        };
+    },
+    /**
+     * Retrieve my account  Required security scopes:   * `api:access`
+     * @summary showMe account
+     */
+    accountShowMe: function (options) {
+        var fetchArgs = exports.AccountApiFetchParamCreator.accountShowMe(options);
+        return function (fetch, basePath) {
+            if (fetch === void 0) { fetch = isomorphicFetch; }
+            if (basePath === void 0) { basePath = BASE_PATH; }
+            return fetch(basePath + fetchArgs.url, fetchArgs.options).then(function (response) {
+                if (response.status >= 200 && response.status < 300) {
+                    return response.json();
+                }
+                else {
+                    throw response;
+                }
+            });
+        };
+    },
+};
+/**
+ * AccountApi - object-oriented interface
+ */
+var AccountApi = (function (_super) {
+    __extends(AccountApi, _super);
+    function AccountApi() {
+        _super.apply(this, arguments);
+    }
+    /**
+     * Retrieve account with given id or something
+     * @summary show account
+     * @param ids
+     */
+    AccountApi.prototype.accountShow = function (params, options) {
+        return exports.AccountApiFp.accountShow(params, options)(this.fetch, this.basePath);
+    };
+    /**
+     * Retrieve my account  Required security scopes:   * `api:access`
+     * @summary showMe account
+     */
+    AccountApi.prototype.accountShowMe = function (options) {
+        return exports.AccountApiFp.accountShowMe(options)(this.fetch, this.basePath);
+    };
+    return AccountApi;
+}(BaseAPI));
+exports.AccountApi = AccountApi;
+;
+/**
+ * AccountApi - factory interface
+ */
+exports.AccountApiFactory = function (fetch, basePath) {
+    return {
+        /**
+         * Retrieve account with given id or something
+         * @summary show account
+         * @param ids
+         */
+        accountShow: function (params, options) {
+            return exports.AccountApiFp.accountShow(params, options)(fetch, basePath);
+        },
+        /**
+         * Retrieve my account  Required security scopes:   * `api:access`
+         * @summary showMe account
+         */
+        accountShowMe: function (options) {
+            return exports.AccountApiFp.accountShowMe(options)(fetch, basePath);
+        },
+    };
+};
+/**
  * MessageApi - fetch parameter creator
  */
 exports.MessageApiFetchParamCreator = {

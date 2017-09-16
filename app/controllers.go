@@ -32,6 +32,80 @@ func initService(service *goa.Service) {
 	service.Decoder.Register(goa.NewJSONDecoder, "*/*")
 }
 
+// AccountController is the controller interface for the Account actions.
+type AccountController interface {
+	goa.Muxer
+	Show(*ShowAccountContext) error
+	ShowMe(*ShowMeAccountContext) error
+}
+
+// MountAccountController "mounts" a Account resource controller on the given service.
+func MountAccountController(service *goa.Service, ctrl AccountController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/api/accounts", ctrl.MuxHandler("preflight", handleAccountOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/api/accounts/me", ctrl.MuxHandler("preflight", handleAccountOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowAccountContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handleAccountOrigin(h)
+	service.Mux.Handle("GET", "/api/accounts", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Account", "action", "Show", "route", "GET /api/accounts")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowMeAccountContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.ShowMe(rctx)
+	}
+	h = handleSecurity("jwt", h, "api:access")
+	h = handleAccountOrigin(h)
+	service.Mux.Handle("GET", "/api/accounts/me", ctrl.MuxHandler("showMe", h, nil))
+	service.LogInfo("mount", "ctrl", "Account", "action", "ShowMe", "route", "GET /api/accounts/me", "security", "jwt")
+}
+
+// handleAccountOrigin applies the CORS response headers corresponding to the origin.
+func handleAccountOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://test.com:3000") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Allow-Credentials", "false")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
+				rw.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-Csrftoken, Authorization")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
 // MessageController is the controller interface for the Message actions.
 type MessageController interface {
 	goa.Muxer

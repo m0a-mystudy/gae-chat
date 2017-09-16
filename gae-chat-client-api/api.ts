@@ -37,6 +37,22 @@ export class BaseAPI {
 };
 
 /**
+ * A account (default view)
+ */
+export interface Account {
+    "googleUserID": string;
+    "lastLogin": Date;
+    "name"?: string;
+    "picture": string;
+}
+
+/**
+ * AccountCollection is the media type for an array of Account (default view)
+ */
+export interface AccountCollection extends Array<Account> {
+}
+
+/**
  * Error response media type (default view)
  */
 export interface Error {
@@ -123,6 +139,136 @@ export interface RoomPayload {
     "name": string;
 }
 
+
+
+/**
+ * AccountApi - fetch parameter creator
+ */
+export const AccountApiFetchParamCreator = {
+    /**
+     * Retrieve account with given id or something
+     * @summary show account
+     * @param ids 
+     */
+    accountShow(params: {  "ids"?: Array<string>; }, options?: any): FetchArgs {
+        const baseUrl = `/accounts`;
+        let urlObj = url.parse(baseUrl, true);
+        urlObj.query = assign({}, urlObj.query, {
+            "ids": params["ids"],
+        });
+        let fetchOptions: RequestInit = assign({}, { method: "GET" }, options);
+
+        let contentTypeHeader: Dictionary<string> = {};
+        if (contentTypeHeader) {
+            fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
+        }
+        return {
+            url: url.format(urlObj),
+            options: fetchOptions,
+        };
+    },
+    /**
+     * Retrieve my account  Required security scopes:   * `api:access`
+     * @summary showMe account
+     */
+    accountShowMe(options?: any): FetchArgs {
+        const baseUrl = `/accounts/me`;
+        let urlObj = url.parse(baseUrl, true);
+        let fetchOptions: RequestInit = assign({}, { method: "GET" }, options);
+
+        let contentTypeHeader: Dictionary<string> = {};
+        if (contentTypeHeader) {
+            fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
+        }
+        return {
+            url: url.format(urlObj),
+            options: fetchOptions,
+        };
+    },
+};
+
+/**
+ * AccountApi - functional programming interface
+ */
+export const AccountApiFp = {
+    /**
+     * Retrieve account with given id or something
+     * @summary show account
+     * @param ids 
+     */
+    accountShow(params: { "ids"?: Array<string>;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<AccountCollection> {
+        const fetchArgs = AccountApiFetchParamCreator.accountShow(params, options);
+        return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+            return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response.json();
+                } else {
+                    throw response;
+                }
+            });
+        };
+    },
+    /**
+     * Retrieve my account  Required security scopes:   * `api:access`
+     * @summary showMe account
+     */
+    accountShowMe(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Account> {
+        const fetchArgs = AccountApiFetchParamCreator.accountShowMe(options);
+        return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+            return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response.json();
+                } else {
+                    throw response;
+                }
+            });
+        };
+    },
+};
+
+/**
+ * AccountApi - object-oriented interface
+ */
+export class AccountApi extends BaseAPI {
+    /**
+     * Retrieve account with given id or something
+     * @summary show account
+     * @param ids 
+     */
+    accountShow(params: {  "ids"?: Array<string>; }, options?: any) {
+        return AccountApiFp.accountShow(params, options)(this.fetch, this.basePath);
+    }
+    /**
+     * Retrieve my account  Required security scopes:   * `api:access`
+     * @summary showMe account
+     */
+    accountShowMe(options?: any) {
+        return AccountApiFp.accountShowMe(options)(this.fetch, this.basePath);
+    }
+};
+
+/**
+ * AccountApi - factory interface
+ */
+export const AccountApiFactory = function (fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * Retrieve account with given id or something
+         * @summary show account
+         * @param ids 
+         */
+        accountShow(params: {  "ids"?: Array<string>; }, options?: any) {
+            return AccountApiFp.accountShow(params, options)(fetch, basePath);
+        },
+        /**
+         * Retrieve my account  Required security scopes:   * `api:access`
+         * @summary showMe account
+         */
+        accountShowMe(options?: any) {
+            return AccountApiFp.accountShowMe(options)(fetch, basePath);
+        },
+    };
+};
 
 
 /**

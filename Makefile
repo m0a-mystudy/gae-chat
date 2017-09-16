@@ -24,7 +24,7 @@ PORT:=9089
 CLIENTAPI:=gae-chat-client-api
 
 init:  bootstrap 
-gen: clean generate 
+gen: clean generate codegen
 
 # depend:
 # 	@which glide || go get -v github.com/Masterminds/glide
@@ -53,6 +53,7 @@ codegen:
 	@jq -s '.[0] * .[1]' $(CLIENTAPI)/package.json $(CLIENTAPI)/package_replace.json > replaced_package.json
 	@rm $(CLIENTAPI)/package.json
 	@mv replaced_package.json $(CLIENTAPI)/package.json
+	cd $(CLIENTAPI) && npm link
 
 deploy:
 	goapp deploy -application $(GAE_PROJECT) ./server

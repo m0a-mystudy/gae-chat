@@ -131,37 +131,38 @@ var _ = Resource("message", func() {
 
 })
 
-// var _ = Resource("account", func() {
-// 	DefaultMedia(Account)
-// 	BasePath("accounts")
-// 	// Action("list", func() {
-// 	// 	Routing(GET(""))
-// 	// 	Description("Retrieve all accunts.")
-// 	// 	Response(OK, CollectionOf(Account))
-// 	// 	Response(NotFound)
-// 	// })
-// 	// Action("post", func() {
-// 	// 	Routing(POST(""))
-// 	// 	Description("Create new account")
-// 	// 	Payload(MessagePayload)
-// 	// 	Response(Created, "^/accounts/[0-9]+$")
-// 	// 	Response(BadRequest)
-// 	// })
+var _ = Resource("account", func() {
+	DefaultMedia(Account)
+	BasePath("accounts")
 
-// 	Action("show", func() {
-// 		Routing(
-// 			GET("/:googleUserID"),
-// 		)
-// 		Description("Retrieve account with given id or something")
-// 		Params(func() {
-// 			Param("googleUserID", String)
-// 		})
-// 		Response(OK)
-// 		Response(NotFound)
-// 		Response(BadRequest, ErrorMedia)
-// 	})
+	Action("showMe", func() {
+		Routing(
+			GET("/me"),
+		)
+		Description("Retrieve my account")
+		Security(JWT, func() {
+			Scope("api:access")
+		})
 
-// })
+		Response(OK)
+		Response(NotFound)
+		Response(BadRequest, ErrorMedia)
+	})
+
+	Action("show", func() {
+		Routing(
+			GET(""),
+		)
+		Description("Retrieve account with given id or something")
+		Params(func() {
+			Param("ids", ArrayOf(String))
+		})
+		Response(OK, CollectionOf(Account))
+		Response(NotFound)
+		Response(BadRequest, ErrorMedia)
+	})
+
+})
 
 var Message = MediaType("application/vnd.message+json", func() {
 	Description("A Message")
@@ -226,16 +227,18 @@ var RoomPayload = Type("RoomPayload", func() {
 
 var Account = MediaType("application/vnd.account+json", func() {
 	Description("A account")
-	Reference(RoomPayload)
 	Attributes(func() {
-		Attribute("id", Integer)
 		Attribute("googleUserID", String)
-		Attribute("created", DateTime)
-		Required("id", "googleUserID", "created")
+		Attribute("name", String)
+		Attribute("picture", String)
+		Attribute("lastLogin", DateTime)
+		Required("googleUserID", "picture", "lastLogin")
 	})
 
 	View("default", func() {
-		Attribute("id")
-		Attribute("created")
+		Attribute("googleUserID")
+		Attribute("name")
+		Attribute("picture")
+		Attribute("lastLogin")
 	})
 })

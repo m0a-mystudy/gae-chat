@@ -40,6 +40,9 @@ func init() {
 	c2 := controllers.NewRoomController(service)
 	app.MountRoomController(service, c2)
 
+	c3 := controllers.NewAccountController(service)
+	app.MountAccountController(service, c3)
+
 	// Setup HTTP handler
 	http.HandleFunc("/", service.Mux.ServeHTTP)
 }

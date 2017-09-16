@@ -2,13 +2,16 @@ package models
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"google.golang.org/appengine/aetest"
 
 	"google.golang.org/appengine"
 
+	jwtgo "github.com/dgrijalva/jwt-go"
 	"github.com/goadesign/goa"
+	"github.com/goadesign/goa/middleware/security/jwt"
 
 	"github.com/mjibson/goon"
 	"google.golang.org/appengine/datastore"
@@ -57,6 +60,7 @@ type Loader interface {
 	Message(roomName string, messageID int64) (*Message, error)
 
 	Login(googleUserID string) (*Login, error)
+	LoginFromJWTContext(ctx context.Context) (*Login, error)
 }
 
 type Saver interface {
@@ -243,6 +247,23 @@ func (m *Model) Login(googleUserID string) (*Login, error) {
 	}
 	return login, nil
 }
+
+func (m *Model) LoginFromJWTContext(ctx context.Context) (*Login, error) {
+	token := jwt.ContextJWT(ctx)
+	if token == nil {
+		return nil, fmt.Errorf("JWT token is missing from context") // internal error
+	}
+
+	claims := token.Claims.(jwtgo.MapClaims)
+
+	googleID, ok := claims["sub"].(string)
+	if !ok {
+		return nil, fmt.Errorf("JWT token['sub'] is missing from context") // internal error
+	}
+
+	return m.Login(googleID)
+}
+
 func (m *Model) PostLogin(googleUserID, email, name string, picture []byte) (*datastore.Key, error) {
 
 	newLogin := &Login{
