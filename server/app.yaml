@@ -3,14 +3,32 @@ runtime: go
 api_version: go1.8
 
 handlers:
-- url: /.*
+- url: /$
+  static_files: chat-client/build/index.html
+  upload: chat-client/build/index.html
+
+- url: /static/(.*)
+  static_files: chat-client/build/static/\1
+  upload: chat-client/build/static/.*
+
+- url: /api/.*
   script: _go_app
+
+- url: /login
+  script: _go_app
+
+- url: /oauth2callback
+  script: _go_app
+
+
+
+
 
 skip_files:
   - ^(node_modules/.*)
   - ^(.*/)?.*/node_modules/.*$
   - gae-chat-client-api/
-
+  
 env_variables:
   OPENID_GOOGLE_SECRET: "NHrMUaZ7ohx_ZDMCXFwGqfeD"
   OPENID_GOOGLE_CLIENT: "247678913828-06mf3nqmvchjbm7bdc7e25i0bmmtp9vd.apps.googleusercontent.com"

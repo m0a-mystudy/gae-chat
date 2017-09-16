@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"google.golang.org/appengine/aetest"
+	// "google.golang.org/appengine/aetest"
 
 	"google.golang.org/appengine"
 
@@ -108,15 +108,15 @@ func FromAppEngineCTX(ctx context.Context) LoadSaver {
 	}
 }
 
-// TestContext is testTool
-func TestContext() (LoadSaver, func(), error) {
-	c, done, err := aetest.NewContext()
+// // TestContext is testTool
+// func TestContext() (LoadSaver, func(), error) {
+// 	c, done, err := aetest.NewContext()
 
-	if err != nil {
-		return nil, nil, err
-	}
-	return FromAppEngineCTX(c), done, nil
-}
+// 	if err != nil {
+// 		return nil, nil, err
+// 	}
+// 	return FromAppEngineCTX(c), done, nil
+// }
 
 // RunInTransaction is Transaction wrapper
 func (m *Model) RunInTransaction(f func(tg *Model) error, opts *datastore.TransactionOptions) error {

@@ -56,7 +56,7 @@ codegen:
 	cd $(CLIENTAPI) && npm link
 
 deploy:
-	goapp deploy -application $(GAE_PROJECT) ./server
+	goapp deploy -application $(GAE_PROJECT) -version 1 ./server
 
 rollback:
 	appcfg.py rollback ./server -A $(GAE_PROJECT)
