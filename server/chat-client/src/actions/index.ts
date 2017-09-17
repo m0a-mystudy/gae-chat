@@ -25,3 +25,6 @@ export const loadMessages = actionCreator<api.MessageCollection>('LOAD_MESSAGES'
 
 // message送信
 export const postMessage = actionCreator.async<{roomName: string, message: string}, api.Message>('POST_MESSAGE');
+
+// error処理
+export const Error = actionCreator<Error>('ERROR');

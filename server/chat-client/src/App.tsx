@@ -47,12 +47,13 @@ class App extends React.Component<Props & DispatchProp<State>, State> {
         this.state = {
             isOpenModal: false
         };
+
     }
 
     componentDidMount() {
         const { dispatch } = this.props;
         if (dispatch) {
-            dispatch(actions.loadRooms.started(undefined));
+            dispatch(actions.loadRooms.started(undefined));            
         }
 
     }
@@ -78,8 +79,10 @@ class App extends React.Component<Props & DispatchProp<State>, State> {
         });
         // console.log('fetchIds', fetchIds);
         // console.groupEnd();
-
-        dispatch(actions.loadAccounts.started({ googleUsrIDs: fetchIds }));
+        if (fetchIds.length > 0) {
+            dispatch(actions.loadAccounts.started({ googleUsrIDs: fetchIds }));
+        }
+        
     }
 
     render() {
@@ -93,15 +96,15 @@ class App extends React.Component<Props & DispatchProp<State>, State> {
 
         const roomNames = rooms.list.toArray().map(r => r ? r.name : '');
         const messages = this.props.messages.list;
+
         let selectRoomName = this.props.messages.selectRoomName;
         if (selectRoomName === undefined) {
             selectRoomName = 'generics';
+            dispatch(actions.selectRoom.started({ name: selectRoomName }));
         }
 
-        this.loadAccountsByMessage();
-
+        this.loadAccountsByMessage();        
         const accountsDict = accounts.dict;
-        console.log('accountsDict', accountsDict);
 
         return (
             <div>
@@ -126,6 +129,7 @@ class App extends React.Component<Props & DispatchProp<State>, State> {
                     navibar={<Navigation />}
                     sidemenu={
                         <RoomList
+                            initActiveName={selectRoomName}
                             names={roomNames}
                             onSelectRoom={(name) => dispatch(actions.selectRoom.started({ name }))}
                             onCreateRoom={() => {

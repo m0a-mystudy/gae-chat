@@ -61,10 +61,13 @@ export default class ChatWindow extends React.Component<Props, State> {
               <input
                 className="input"
                 type="text"
-                placeholder="message"
+                placeholder="shift + enter で送信"
                 onKeyUp={
                   (ev) => {
-                    if (ev.keyCode === 13) { this.sendAndClear(); }
+                    // shift + enter
+                    if (ev.keyCode === 13 && ev.shiftKey) { 
+                      this.sendAndClear(); 
+                    }
                   }
                 }
                 onChange={ev => (this.setState({message: ev.target.value}))}

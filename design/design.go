@@ -11,12 +11,12 @@ var JWT = JWTSecurity("jwt", func() {
 })
 
 var _ = API("GAE Chat API", func() {
-	Title("goa study chat") // Documentation title
+	Title("goa study chat")
 	Description("goa study chat api")
 	Host("localhost:9089")
 	Scheme("http")
 	BasePath("/api")
-	Origin("http://test.com:3000", func() {
+	Origin("http://some.test.com:3000", func() {
 		Methods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
 		Headers("Origin", "X-Requested-With", "Content-Type", "Accept",
 			"X-Csrftoken", "Authorization")
@@ -72,20 +72,6 @@ var _ = Resource("room", func() {
 		Response(Created, "/rooms/[0-9]+")
 		Response(BadRequest, ErrorMedia)
 	})
-
-	// Action("watch", func() {
-	// 	Routing(
-	// 		GET("/:roomID/watch"),
-	// 	)
-	// 	Scheme("ws")
-	// 	Description("Retrieve room with given id")
-	// 	Params(func() {
-	// 		Param("roomID", Integer)
-	// 	})
-	// 	Response(SwitchingProtocols)
-	// 	Response(BadRequest, ErrorMedia)
-	// })
-
 })
 
 var _ = Resource("message", func() {

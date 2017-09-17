@@ -23,6 +23,7 @@ const Room = (props: RoomProps) => {
 
 interface Props extends React.Props<{}> {
     names: string[];
+    initActiveName: string;
     onSelectRoom?(roomName: string): void;
     onCreateRoom?(): void;
 }
@@ -37,14 +38,14 @@ export default class RoomList extends React.Component<Props, State> {
         super(props);
         this.state = {
             searchText: '',
-            activeName: '',
+            activeName: props.initActiveName,
         };
     }
     resetFilter() {
-        this.setState({ searchText: '', activeName: '' });
+        this.setState({ searchText: '' });
     }
     setFilter(searchText: string) {
-        this.setState({ searchText, activeName: '' });
+        this.setState({ searchText });
     }
     setActive(activeName: string) {
         this.setState({ activeName });

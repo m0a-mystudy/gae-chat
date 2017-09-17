@@ -79,7 +79,8 @@ const postMessageEpic: ChatEpic =
                     params: action.payload,
                     error
                 })));
-        });
+        }).catch(error => Rx.Observable.of(actions.Error(error)))
+;
 
 // 上記メッセージ登録完了に合わせてメッセージの取得を行う
 const postMessagedoneEpic: ChatEpic =

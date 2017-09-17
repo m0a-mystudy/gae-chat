@@ -28,6 +28,7 @@ storiesOf('chat', module)
             navibar={<Navbar avaterImg={faker.image.avatar()} />}
             sidemenu={
                 <RoomList
+                    initActiveName={rooms[0]}
                     names={rooms}
                     onSelectRoom={action('onSelectRoom')}
                     onCreateRoom={action('onCreateRoom')}
