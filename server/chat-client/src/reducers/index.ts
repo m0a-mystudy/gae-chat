@@ -40,7 +40,7 @@ const loginToken = reducerWithInitialState(new LoginToken())
 
 const rooms = reducerWithInitialState(new Rooms())
     .case(actions.loadRooms.done, (state, payload) => (state.setRooms(payload.result)))
-    .case(actions.createRoom.done, (state, payload) => (state.setRooms([<api.Room>{ name: payload.params.name }])))
+    .case(actions.createRoom.done, (state, payload) => (state.setRooms([<api.Room> { name: payload.params.name }])))
     ;
 
 const messages = reducerWithInitialState(new Messages())

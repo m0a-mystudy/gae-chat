@@ -77,6 +77,10 @@ devserver:
 devclient:
 	@cd server/chat-client; yarn start
 
+storybook:
+	@cd server/chat-client; yarn storybook
+
+
 ## Run tests
 test:
 	@cd server; goapp test -v $(REPO)/models
@@ -85,4 +89,4 @@ test:
 help:
 	@make2help $(MAKEFILE_LIST)
 
-.PHONY: test deps help
+.PHONY: test deps help dev
