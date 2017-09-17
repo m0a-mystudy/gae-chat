@@ -3,15 +3,28 @@ package models
 import (
 	"fmt"
 	"testing"
+
+	"google.golang.org/appengine/aetest"
 )
 
+// TestContext is testTool
+func TContext() (LoadSaver, func(), error) {
+	c, done, err := aetest.NewContext()
+
+	if err != nil {
+		return nil, nil, err
+	}
+	return FromAppEngineCTX(c), done, nil
+}
+
 func RunInTesting(t *testing.T, f func(m *Model, t *testing.T) error) {
-	m, done, err := TestContext()
+	m, done, err := TContext()
 	if err != nil {
 		t.Fatalf("Could not start aetest - %v", err)
 	}
 	defer done()
-	err = f(m, t)
+	mdl := m.(*Model)
+	err = f(mdl, t)
 	if err != nil {
 		t.Fatalf("err - %v", err)
 		panic(err)

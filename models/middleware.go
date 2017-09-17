@@ -9,10 +9,12 @@ import (
 
 var modelKey string
 
-func WithModel(ctx context.Context, model LoadSaver) context.Context {
+// withModel modelをcontextに登録する
+func withModel(ctx context.Context, model LoadSaver) context.Context {
 	return context.WithValue(ctx, &modelKey, model)
 }
 
+// ContextModel modelをcontextから取り出す
 func ContextModel(ctx context.Context) LoadSaver {
 	if t := ctx.Value(&modelKey); t != nil {
 		return t.(LoadSaver)
@@ -20,11 +22,12 @@ func ContextModel(ctx context.Context) LoadSaver {
 	return nil
 }
 
+// Middleware contextに対する登録処理
 func Middleware(setModelHandler func(ctx context.Context) LoadSaver) goa.Middleware {
 	return func(h goa.Handler) goa.Handler {
 		return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 
-			newCtx := WithModel(ctx, setModelHandler(ctx))
+			newCtx := withModel(ctx, setModelHandler(ctx))
 			return h(newCtx, rw, req)
 		}
 	}

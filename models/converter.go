@@ -4,10 +4,13 @@ import (
 	"github.com/m0a-mystudy/gae-chat/app"
 )
 
+// Converter model -> goa.app型への変換インターフェース
 type Converter interface {
 	ToMessageCollectionMedia(m []*Message) *app.MessageCollection
 	ToMessageMedia(m *Message) *app.Message
 }
+
+// TODO コレはここに置かなくていいかも
 
 var _ Converter = &Model{}
 
