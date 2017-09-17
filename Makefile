@@ -1,9 +1,7 @@
 #! /usr/bin/make
 #
-# Makefile for goa examples in appengine
+# Makefile for gae-chat in appengine
 #
-# Targets:
-# - appengine
 # This command makes necessary changes to use with GAE / Go.
 # Also, please be sure to vendoring If you use this command.
 #
@@ -71,9 +69,13 @@ deploy:
 rollback:
 	appcfg.py rollback ./server -A $(GAE_PROJECT)
 
-## Run tests
-local:
+## Run dev server
+devserver:
 	goapp serve -port $(PORT) ./server
+
+## Run dev client proxy
+devclient:
+	@cd server/chat-client; yarn start
 
 ## Run tests
 test:
