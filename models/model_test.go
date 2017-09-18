@@ -14,7 +14,7 @@ func TContext() (LoadSaver, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	return FromAppEngineCTX(c), done, nil
+	return New(c), done, nil
 }
 
 func RunInTesting(t *testing.T, f func(m *Model, t *testing.T) error) {

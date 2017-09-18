@@ -52,8 +52,7 @@ type LoadSaver interface {
 // Model は メソッド集約用構造体
 type Model struct {
 	*goon.Goon
-	goaContext       context.Context
-	appEngineContext context.Context
+	ctx context.Context
 }
 
 var _ LoadSaver = &Model{}
@@ -61,22 +60,11 @@ var _ LoadSaver = &Model{}
 // New is 新規Model作成
 func New(ctx context.Context) LoadSaver {
 	r := goa.ContextRequest(ctx).Request
-	a := appengine.NewContext(r)
-	g := goon.FromContext(a)
-	return &Model{
-		Goon:             g,
-		goaContext:       ctx,
-		appEngineContext: a,
-	}
-}
-
-// FromAppEngineCTX TODO:コンテキストは一箇所に纏められるので纏める
-func FromAppEngineCTX(ctx context.Context) LoadSaver {
+	ctx = appengine.WithContext(ctx, r)
 	g := goon.FromContext(ctx)
 	return &Model{
-		Goon:             g,
-		goaContext:       nil,
-		appEngineContext: ctx,
+		Goon: g,
+		ctx:  ctx,
 	}
 }
 
@@ -93,7 +81,7 @@ func (m *Model) RunInTransaction(f func(tg *Model) error, opts *datastore.Transa
 
 // ForceApply は主にテスト用に利用。結果整合性のために書き込んだ結果がテスト実行中に反映されない問題を解決する(テスト専用)
 func (m *Model) ForceApply(key *datastore.Key) {
-	ctx := m.appEngineContext
+	ctx := m.ctx
 	var dst interface{}
 	datastore.Get(ctx, key, &dst)
 	_ = dst
@@ -101,10 +89,10 @@ func (m *Model) ForceApply(key *datastore.Key) {
 
 // roomKey によってKeyを生成する
 func (m *Model) roomKey(roomName string) *datastore.Key {
-	return datastore.NewKey(m.appEngineContext, "Room", roomName, 0, nil)
+	return datastore.NewKey(m.ctx, "Room", roomName, 0, nil)
 }
 
 // loginKey によってKeyを生成する
 func (m *Model) loginKey(googleUserID string) *datastore.Key {
-	return datastore.NewKey(m.appEngineContext, "Login", googleUserID, 0, nil)
+	return datastore.NewKey(m.ctx, "Login", googleUserID, 0, nil)
 }

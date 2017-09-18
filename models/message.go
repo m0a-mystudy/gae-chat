@@ -30,6 +30,7 @@ func (m *Model) Message(roomName string, messageID int64) (*Message, error) {
 	return message, nil
 }
 
+// Limit is test
 const Limit int = 3
 
 // MessagesByCursor はMessageの一覧取得
@@ -46,7 +47,7 @@ func (m *Model) MessagesByCursor(roomName string, cursorString *string) ([]*Mess
 	}
 
 	res := []*Message{}
-	it := query.Run(m.appEngineContext)
+	it := query.Run(m.ctx)
 
 	for i := 0; i < Limit; i++ {
 		key, err := it.Next(nil)
