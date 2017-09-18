@@ -2,39 +2,36 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import 'moment/locale/ja';
 
-interface State {
-  message: string;
-}
-
 interface Props extends React.Props<{}> {
   windowHeight: number;
   roomName: string;
   onSend: (message: string) => void;
 }
 
-export default class ChatWindow extends React.Component<Props, State> {
-  messageEnd:  HTMLDivElement;
+export default class ChatWindow extends React.Component<Props, {}> {
+  scrollView: HTMLDivElement;
+  messageBody: HTMLInputElement;
   constructor(props: Props) {
     super(props);
-    this.state = {
-      message: ''
-    };
   }
   componentDidMount() {
     this.scrollToBottom();
   }
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
   scrollToBottom() {
-    let elm = ReactDOM.findDOMNode(this.messageEnd);
-    elm.scrollIntoView({ behavior: 'smooth' });
+    let elm = ReactDOM.findDOMNode(this.scrollView);
+    elm.scrollTo({ behavior: 'smooth', top: elm.scrollHeight });
   }
   sendAndClear() {
-    this.props.onSend(this.state.message);
-    this.setState({message: ''});
-    this.scrollToBottom();
+    this.props.onSend(this.messageBody.value);
+    this.messageBody.value = '';
   }
   render() {
     const { roomName, windowHeight, children } = this.props;
-    const { message } = this.state;
+    // const { message } = this.state;
     return (
       <div
         className="card"
@@ -47,13 +44,13 @@ export default class ChatWindow extends React.Component<Props, State> {
         </header>
         <div
           className="card-content"
+          ref={(el: HTMLDivElement) => { this.scrollView = el; }}
           style={{
             overflowY: 'scroll',
             height: `${windowHeight}px`
           }}
         >
           {children}
-          {<div ref={(el: HTMLDivElement) => {this.messageEnd = el; }} />}
         </div>
         <footer className="card-footer">
           <div className="field card-footer-item has-addons">
@@ -62,16 +59,15 @@ export default class ChatWindow extends React.Component<Props, State> {
                 className="input"
                 type="text"
                 placeholder="shift + enter で送信"
+                ref={(el: HTMLInputElement) => { this.messageBody = el; }}
                 onKeyUp={
                   (ev) => {
                     // shift + enter
-                    if (ev.keyCode === 13 && ev.shiftKey) { 
-                      this.sendAndClear(); 
+                    if (ev.keyCode === 13 && ev.shiftKey) {
+                      this.sendAndClear();
                     }
                   }
                 }
-                onChange={ev => (this.setState({message: ev.target.value}))}
-                value={message}
               />
             </p>
             <p className="control">

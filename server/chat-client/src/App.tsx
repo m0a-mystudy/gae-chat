@@ -10,7 +10,7 @@ import Chat from './containers/chat';
 
 import * as api from 'gae-chat-client-api';
 
-import { connect, DispatchProp } from 'react-redux';
+import { connect } from 'react-redux';
 import * as actions from './actions';
 
 // models
@@ -22,6 +22,8 @@ import Accounts from './models/accounts';
 
 import * as reducers from './reducers';
 // import * as faker from 'faker/locale/ja';
+
+import { AnyAction } from 'typescript-fsa';
 
 interface Props extends React.Props<{}> {
     loginToken: LoginToken;
@@ -38,72 +40,83 @@ const mapStateToProps = (state: reducers.State, ownProps: {}): Props => ({
     accounts: state.accounts,
 });
 
+interface DispatchProps {
+    loadRooms(): AnyAction;
+    loadAccounts(googleIds: string[]): AnyAction;
+    createRoom(name: string): AnyAction;
+    selectRoom(name: string): AnyAction;
+    postMessage(roomName: string, message: string): AnyAction;
+}
+
+const mapDispatchProps = (dispatch: Redux.Dispatch<{}>, ownProps: {}): DispatchProps => ({
+    loadRooms: () => dispatch(actions.loadRooms.started(undefined)),
+    loadAccounts: googleUsrIDs => dispatch(actions.loadAccounts.started({ googleUsrIDs })),
+    createRoom: name => dispatch(actions.createRoom.started({ name })),
+    selectRoom: name => dispatch(actions.selectRoom.started({ name })),
+    postMessage: (roomName, message) => dispatch(actions.postMessage.started({ roomName, message }))
+});
+
 interface State {
     isOpenModal: boolean;
 }
-class App extends React.Component<Props & DispatchProp<State>, State> {
-    constructor(props: Props) {
+class App extends React.Component<Props &  DispatchProps, State> {
+    constructor(props: Props & DispatchProps) {
         super(props);
         this.state = {
             isOpenModal: false
         };
-
     }
-
     componentDidMount() {
-        const { dispatch } = this.props;
-        if (dispatch) {
-            dispatch(actions.loadRooms.started(undefined));            
+        const { loadRooms } = this.props;
+        loadRooms();
+    }
+    componentWillReceiveProps(nextProps: Readonly<Props & DispatchProps>) {
+        if (nextProps.messages !== this.props.messages) {
+            this.loadAccountsByMessage();
+        }
+
+        const { selectRoom } = this.props;
+
+        let selectRoomName = this.props.messages.selectRoomName;
+        if (selectRoomName === undefined) {
+            selectRoomName = 'generics';
+            selectRoom(selectRoomName);
         }
 
     }
     loadAccountsByMessage() {
-        const { dispatch } = this.props;
-        if (dispatch === undefined) {
-            return;
-        }
+        const { loadAccounts } = this.props;
 
         // storeに保有してないaccount情報を探す。
         const Ids = this.props.messages.list.map((m: api.Message) => m.auther);
-        // console.group('loadAccountsByMessage');
-        // console.log('this.props.messages.list', this.props.messages.list);
-        // console.log('Ids', Ids);
-
-        const accountDict = this.props.accounts.dict; // . //.map((a: api.Account) => a.googleUserID);
-        // console.log('accountDict', accountDict);
+        const accountDict = this.props.accounts.dict; 
         let fetchIds: string[] = [];
         Ids.forEach((id: string) => {
             if (!accountDict.get(id) && fetchIds.indexOf(id) < 0) {
                 fetchIds.push(id);
             }
         });
-        // console.log('fetchIds', fetchIds);
-        // console.groupEnd();
         if (fetchIds.length > 0) {
-            dispatch(actions.loadAccounts.started({ googleUsrIDs: fetchIds }));
+            loadAccounts(fetchIds);
         }
-        
+
     }
 
     render() {
         const { isOpenModal } = this.state;
         const {
-            dispatch,
             rooms,
             accounts,
+            selectRoom,
+            postMessage,
+
         } = this.props;
-        if (!dispatch) { return null; }
 
         const roomNames = rooms.list.toArray().map(r => r ? r.name : '');
         const messages = this.props.messages.list;
+        const selectRoomName = this.props.messages.selectRoomName;
+        if (!selectRoomName) { return null; }
 
-        let selectRoomName = this.props.messages.selectRoomName;
-        if (selectRoomName === undefined) {
-            selectRoomName = 'generics';
-            dispatch(actions.selectRoom.started({ name: selectRoomName }));
-        }
-
-        this.loadAccountsByMessage();        
         const accountsDict = accounts.dict;
 
         return (
@@ -112,7 +125,7 @@ class App extends React.Component<Props & DispatchProp<State>, State> {
                     isOpenModal &&
                     <CreateRoom
                         onCreate={(name) => {
-                            dispatch(actions.createRoom.started({ name }));
+                            selectRoom(name);
                             this.setState(
                                 { isOpenModal: false }
                             );
@@ -131,7 +144,7 @@ class App extends React.Component<Props & DispatchProp<State>, State> {
                         <RoomList
                             initActiveName={selectRoomName}
                             names={roomNames}
-                            onSelectRoom={(name) => dispatch(actions.selectRoom.started({ name }))}
+                            onSelectRoom={selectRoom}
                             onCreateRoom={() => {
                                 this.setState({ isOpenModal: true });
                             }}
@@ -147,10 +160,7 @@ class App extends React.Component<Props & DispatchProp<State>, State> {
                                     if (message.length === 0 || roomName === undefined) {
                                         return;
                                     }
-                                    dispatch(actions.postMessage.started({
-                                        roomName,
-                                        message
-                                    }));
+                                    postMessage(roomName, message);
                                 }
                             }
                         >
@@ -180,4 +190,4 @@ class App extends React.Component<Props & DispatchProp<State>, State> {
     }
 }
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, mapDispatchProps)(App);

@@ -80,7 +80,7 @@ const postMessageEpic: ChatEpic =
                     error
                 })));
         }).catch(error => Rx.Observable.of(actions.Error(error)))
-;
+    ;
 
 // 上記メッセージ登録完了に合わせてメッセージの取得を行う
 const postMessagedoneEpic: ChatEpic =
@@ -92,19 +92,19 @@ const postMessagedoneEpic: ChatEpic =
         });
 
 // account情報の取得
-const loadAccountsEpic: ChatEpic = 
-(action$, store, depends) => action$.ofAction(actions.loadAccounts.started)
-    .mergeMap(action => {
-        return depends.fetchAccounts$(action.payload.googleUsrIDs)
-            .map(payload => actions.loadAccounts.done({
-                params: action.payload,
-                result: payload
-            }))
-            .catch(error => Rx.Observable.of(actions.loadAccounts.failed({
-                params: action.payload,
-                error
-            })));
-    });
+const loadAccountsEpic: ChatEpic =
+    (action$, store, depends) => action$.ofAction(actions.loadAccounts.started)
+        .mergeMap(action => {
+            return depends.fetchAccounts$(action.payload.googleUsrIDs)
+                .map(payload => actions.loadAccounts.done({
+                    params: action.payload,
+                    result: payload
+                }))
+                .catch(error => Rx.Observable.of(actions.loadAccounts.failed({
+                    params: action.payload,
+                    error
+                })));
+        });
 
 export const epics = combineEpics(
     loadMyInfoEpic,
