@@ -34,8 +34,6 @@ const accounts = reducerWithInitialState(new Accounts())
 
 const loginToken = reducerWithInitialState(new LoginToken())
     .case(actions.loadMyInfo.done, (state, payload) => (state.setMyAccount(payload.result)))
-    // .case(actions.loadLoginInfo.done , (state, payload) => (state.setMyAccount(payload.result)))
-    // .case(actions.logout, (state) => (state.logout()));
     ;
 
 const rooms = reducerWithInitialState(new Rooms())
