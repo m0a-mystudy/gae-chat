@@ -110,6 +110,7 @@ class App extends React.Component<Props & DispatchProps, State> {
             rooms,
             accounts,
             selectRoom,
+            createRoom,
             loadMessageMore,
             postMessage,
             messages,
@@ -129,7 +130,7 @@ class App extends React.Component<Props & DispatchProps, State> {
                     isOpenModal &&
                     <CreateRoom
                         onCreate={(name) => {
-                            selectRoom(name);
+                            createRoom(name);
                             this.setState(
                                 { isOpenModal: false }
                             );
