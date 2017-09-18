@@ -13,14 +13,10 @@ const store = createStore(rootReducer, initState, composeWithDevTools(
   applyMiddleware(epicMiddleware),
 ));
 
-const Index = () => (
-  <Provider store={store}>
-    <App />
-  </Provider>
-);
-
 ReactDOM.render(
-  <Index />,
+  <Provider store={store}>
+  <App />
+</Provider>,
   document.getElementById('root') as HTMLElement
 );
 registerServiceWorker();
