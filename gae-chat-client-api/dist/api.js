@@ -174,8 +174,7 @@ exports.MessageApiFetchParamCreator = {
      * Retrieve all messages.
      * @summary list message
      * @param name Name of room
-     * @param limit
-     * @param offset
+     * @param nextCursor
      */
     messageList: function (params, options) {
         // verify required parameter "name" is set
@@ -186,8 +185,7 @@ exports.MessageApiFetchParamCreator = {
             .replace("{" + "name" + "}", "" + params["name"]);
         var urlObj = url.parse(baseUrl, true);
         urlObj.query = assign({}, urlObj.query, {
-            "limit": params["limit"],
-            "offset": params["offset"],
+            "nextCursor": params["nextCursor"],
         });
         var fetchOptions = assign({}, { method: "GET" }, options);
         var contentTypeHeader = {};
@@ -269,8 +267,7 @@ exports.MessageApiFp = {
      * Retrieve all messages.
      * @summary list message
      * @param name Name of room
-     * @param limit
-     * @param offset
+     * @param nextCursor
      */
     messageList: function (params, options) {
         var fetchArgs = exports.MessageApiFetchParamCreator.messageList(params, options);
@@ -342,8 +339,7 @@ var MessageApi = (function (_super) {
      * Retrieve all messages.
      * @summary list message
      * @param name Name of room
-     * @param limit
-     * @param offset
+     * @param nextCursor
      */
     MessageApi.prototype.messageList = function (params, options) {
         return exports.MessageApiFp.messageList(params, options)(this.fetch, this.basePath);
@@ -379,8 +375,7 @@ exports.MessageApiFactory = function (fetch, basePath) {
          * Retrieve all messages.
          * @summary list message
          * @param name Name of room
-         * @param limit
-         * @param offset
+         * @param nextCursor
          */
         messageList: function (params, options) {
             return exports.MessageApiFp.messageList(params, options)(fetch, basePath);

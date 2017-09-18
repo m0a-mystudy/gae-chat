@@ -21,7 +21,10 @@ export const createRoom = actionCreator.async<{name: string}, api.Room>('CREATE_
 // room選択処理
 export const selectRoom = actionCreator.async<{name: string}, api.Room>('SELECT_ROOM');
 // selectRoom から開始してMessageの祝を行い以下のactionで設定する
-export const loadMessages = actionCreator<api.MessageCollection>('LOAD_MESSAGES');
+export const loadMessages = actionCreator<api.ResponseMessages>('LOAD_MESSAGES');
+
+// 追加メッセージ取得
+export const loadMessagesMore = actionCreator.async<{roomName: string, nextCursor?: string}, api.ResponseMessages>('LOAD_MESSAGES_MORE');
 
 // message送信
 export const postMessage = actionCreator.async<{roomName: string, message: string}, api.Message>('POST_MESSAGE');

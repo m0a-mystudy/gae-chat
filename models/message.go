@@ -30,6 +30,47 @@ func (m *Model) Message(roomName string, messageID int64) (*Message, error) {
 	return message, nil
 }
 
+const Limit int = 3
+
+// MessagesByCursor はMessageの一覧取得
+func (m *Model) MessagesByCursor(roomName string, cursorString *string) ([]*Message, *string, error) {
+
+	roomKey := m.roomKey(roomName)
+	query := datastore.NewQuery("Message").Ancestor(roomKey).Order("-Created").KeysOnly()
+	if cursorString != nil {
+		cursor, err := datastore.DecodeCursor(*cursorString)
+		if err != nil {
+			return nil, nil, err
+		}
+		query = query.Start(cursor)
+	}
+
+	res := []*Message{}
+	it := query.Run(m.appEngineContext)
+
+	for i := 0; i < Limit; i++ {
+		key, err := it.Next(nil)
+		if err == datastore.Done {
+			break
+		}
+		mes := &Message{
+			ID:   key.IntID(),
+			Room: roomKey,
+		}
+		err = m.Get(mes)
+		if err != nil {
+			return nil, nil, err
+		}
+		res = append(res, mes)
+	}
+	nextCursor, err := it.Cursor()
+	if err != nil {
+		return nil, nil, err
+	}
+	nextCusrorString := nextCursor.String()
+	return res, &nextCusrorString, nil
+}
+
 // Messages はMessageの一覧取得
 func (m *Model) Messages(roomName string, offset, limit int) ([]*Message, error) {
 	var messages []*Message

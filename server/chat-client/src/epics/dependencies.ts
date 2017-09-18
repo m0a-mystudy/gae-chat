@@ -15,8 +15,8 @@ export const epicDependencies = {
         Rx.Observable.fromPromise(api.RoomApiFp.roomList({ limit: 100, offset: 0 })(runOptions.fetch, runOptions.baseURL)),
     createRoom$: (payload: api.RoomPayload, options: Object | undefined) =>
         Rx.Observable.fromPromise(api.RoomApiFp.roomPost({ payload }, options)(runOptions.fetch, runOptions.baseURL)),
-    fetchMessages$: (roomName: string) =>
-        Rx.Observable.fromPromise(api.MessageApiFp.messageList({ name: roomName, limit: 100, offset: 0 })(runOptions.fetch, runOptions.baseURL)),
+    fetchMessages$: (roomName: string, nextCursor?: string) =>
+        Rx.Observable.fromPromise(api.MessageApiFp.messageList({ name: roomName, nextCursor})(runOptions.fetch, runOptions.baseURL)),
     postMessage$: (roomName: string, message: string, auther: string, options: Object | undefined) =>
         Rx.Observable.fromPromise(api.MessageApiFp.messagePost({
             name: roomName,

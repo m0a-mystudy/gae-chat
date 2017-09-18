@@ -106,9 +106,8 @@ type ListMessageContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	Limit  *int
-	Name   string
-	Offset *int
+	Name       string
+	NextCursor *string
 }
 
 // NewListMessageContext parses the incoming request URL and body, performs validations and creates the
@@ -120,17 +119,6 @@ func NewListMessageContext(ctx context.Context, r *http.Request, service *goa.Se
 	req := goa.ContextRequest(ctx)
 	req.Request = r
 	rctx := ListMessageContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramLimit := req.Params["limit"]
-	if len(paramLimit) > 0 {
-		rawLimit := paramLimit[0]
-		if limit, err2 := strconv.Atoi(rawLimit); err2 == nil {
-			tmp2 := limit
-			tmp1 := &tmp2
-			rctx.Limit = tmp1
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("limit", rawLimit, "integer"))
-		}
-	}
 	paramName := req.Params["name"]
 	if len(paramName) > 0 {
 		rawName := paramName[0]
@@ -145,26 +133,17 @@ func NewListMessageContext(ctx context.Context, r *http.Request, service *goa.Se
 			err = goa.MergeErrors(err, goa.InvalidLengthError(`name`, rctx.Name, utf8.RuneCountInString(rctx.Name), 20, false))
 		}
 	}
-	paramOffset := req.Params["offset"]
-	if len(paramOffset) > 0 {
-		rawOffset := paramOffset[0]
-		if offset, err2 := strconv.Atoi(rawOffset); err2 == nil {
-			tmp4 := offset
-			tmp3 := &tmp4
-			rctx.Offset = tmp3
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("offset", rawOffset, "integer"))
-		}
+	paramNextCursor := req.Params["nextCursor"]
+	if len(paramNextCursor) > 0 {
+		rawNextCursor := paramNextCursor[0]
+		rctx.NextCursor = &rawNextCursor
 	}
 	return &rctx, err
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListMessageContext) OK(r MessageCollection) error {
-	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.message+json; type=collection")
-	if r == nil {
-		r = MessageCollection{}
-	}
+func (ctx *ListMessageContext) OK(r *ResponseMessages) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.response_messages+json")
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
@@ -311,9 +290,9 @@ func NewListRoomContext(ctx context.Context, r *http.Request, service *goa.Servi
 	if len(paramLimit) > 0 {
 		rawLimit := paramLimit[0]
 		if limit, err2 := strconv.Atoi(rawLimit); err2 == nil {
-			tmp7 := limit
-			tmp6 := &tmp7
-			rctx.Limit = tmp6
+			tmp3 := limit
+			tmp2 := &tmp3
+			rctx.Limit = tmp2
 		} else {
 			err = goa.MergeErrors(err, goa.InvalidParamTypeError("limit", rawLimit, "integer"))
 		}
@@ -322,9 +301,9 @@ func NewListRoomContext(ctx context.Context, r *http.Request, service *goa.Servi
 	if len(paramOffset) > 0 {
 		rawOffset := paramOffset[0]
 		if offset, err2 := strconv.Atoi(rawOffset); err2 == nil {
-			tmp9 := offset
-			tmp8 := &tmp9
-			rctx.Offset = tmp8
+			tmp5 := offset
+			tmp4 := &tmp5
+			rctx.Offset = tmp4
 		} else {
 			err = goa.MergeErrors(err, goa.InvalidParamTypeError("offset", rawOffset, "integer"))
 		}

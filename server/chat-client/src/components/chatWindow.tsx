@@ -2,10 +2,13 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import 'moment/locale/ja';
 
+import ReadMore from './readMore';
 interface Props extends React.Props<{}> {
   windowHeight: number;
   roomName: string;
   onSend: (message: string) => void;
+  onReadMore?: () => void;
+  isLoading?: boolean;
 }
 
 export default class ChatWindow extends React.Component<Props, {}> {
@@ -50,6 +53,13 @@ export default class ChatWindow extends React.Component<Props, {}> {
             height: `${windowHeight}px`
           }}
         >
+          <ReadMore  
+            onClick={() => {
+              if (this.props.onReadMore) { this.props.onReadMore(); }}
+            }
+            isLoading={this.props.isLoading}
+          />
+
           {children}
         </div>
         <footer className="card-footer">

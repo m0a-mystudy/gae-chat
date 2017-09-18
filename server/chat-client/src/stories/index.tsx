@@ -13,7 +13,7 @@ import Chat from '../containers/chat';
 import * as faker from 'faker/locale/ja';
 
 let messages: number[] = [];
-for (let i = 0; i < 50; i++) {
+for (let i = 0; i < 10; i++) {
     messages.push(i);
 }
 
@@ -39,6 +39,7 @@ storiesOf('chat', module)
                     windowHeight={550}
                     roomName="sample Room01"
                     onSend={action('onSend')}
+                    onReadMore={action('onReadMore')}
                 >
                     {
                         messages.map(v => (
@@ -108,4 +109,3 @@ storiesOf('Bulma02', module)
             </div>
         </div>
     ));
-

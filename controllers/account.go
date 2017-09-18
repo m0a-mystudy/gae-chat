@@ -13,6 +13,7 @@ type AccountController struct {
 	*goa.Controller
 }
 
+// ToAccountCollectionMedia is converter from model to app
 func ToAccountCollectionMedia(m []*models.Login) app.AccountCollection {
 	res := app.AccountCollection{}
 	for _, v := range m {
@@ -21,6 +22,7 @@ func ToAccountCollectionMedia(m []*models.Login) app.AccountCollection {
 	return res
 }
 
+// ToAccountMedia  is converter from model to app
 func ToAccountMedia(m *models.Login) *app.Account {
 	picture := base64.StdEncoding.EncodeToString(m.Picture)
 	return &app.Account{

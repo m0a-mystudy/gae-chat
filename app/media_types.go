@@ -101,6 +101,28 @@ func (mt MessageCollection) Validate() (err error) {
 	return
 }
 
+// A ResponseMessage (default view)
+//
+// Identifier: application/vnd.response_messages+json; view=default
+type ResponseMessages struct {
+	Messages MessageCollection `form:"messages" json:"messages" xml:"messages"`
+	Next     string            `form:"next" json:"next" xml:"next"`
+}
+
+// Validate validates the ResponseMessages media type instance.
+func (mt *ResponseMessages) Validate() (err error) {
+	if mt.Messages == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "messages"))
+	}
+	if mt.Next == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "next"))
+	}
+	if err2 := mt.Messages.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
+	}
+	return
+}
+
 // A room (default view)
 //
 // Identifier: application/vnd.room+json; view=default

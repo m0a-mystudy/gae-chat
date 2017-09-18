@@ -69,6 +69,13 @@ export interface MessagePayload {
     "created": Date;
 }
 /**
+ * A ResponseMessage (default view)
+ */
+export interface ResponseMessages {
+    "messages": MessageCollection;
+    "next": string;
+}
+/**
  * A room (default view)
  */
 export interface Room {
@@ -155,8 +162,7 @@ export declare const AccountApiFactory: (fetch?: FetchAPI, basePath?: string) =>
 export declare const MessageApiFetchParamCreator: {
     messageList(params: {
         "name": string;
-        "limit"?: number;
-        "offset"?: number;
+        "nextCursor"?: string;
     }, options?: any): FetchArgs;
     messagePost(params: {
         "name": string;
@@ -173,9 +179,8 @@ export declare const MessageApiFetchParamCreator: {
 export declare const MessageApiFp: {
     messageList(params: {
         "name": string;
-        "limit"?: number;
-        "offset"?: number;
-    }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<MessageCollection>;
+        "nextCursor"?: string;
+    }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ResponseMessages>;
     messagePost(params: {
         "name": string;
         "payload": MessagePayload;
@@ -193,14 +198,12 @@ export declare class MessageApi extends BaseAPI {
      * Retrieve all messages.
      * @summary list message
      * @param name Name of room
-     * @param limit
-     * @param offset
+     * @param nextCursor
      */
     messageList(params: {
         "name": string;
-        "limit"?: number;
-        "offset"?: number;
-    }, options?: any): Promise<MessageCollection>;
+        "nextCursor"?: string;
+    }, options?: any): Promise<ResponseMessages>;
     /**
      * Create new message  Required security scopes:   * `api:access`
      * @summary post message
@@ -228,9 +231,8 @@ export declare class MessageApi extends BaseAPI {
 export declare const MessageApiFactory: (fetch?: FetchAPI, basePath?: string) => {
     messageList(params: {
         "name": string;
-        "limit"?: number;
-        "offset"?: number;
-    }, options?: any): Promise<MessageCollection>;
+        "nextCursor"?: string;
+    }, options?: any): Promise<ResponseMessages>;
     messagePost(params: {
         "name": string;
         "payload": MessagePayload;

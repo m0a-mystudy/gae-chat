@@ -14,3 +14,9 @@ indexes:
   ancestor: yes
   properties:
   - name: Created
+
+- kind: Message
+  ancestor: yes
+  properties:
+  - name: Created
+    direction: desc

@@ -42,8 +42,21 @@ const rooms = reducerWithInitialState(new Rooms())
     ;
 
 const messages = reducerWithInitialState(new Messages())
-    .case(actions.selectRoom.started, (state, payload) => (state.selectRoom(payload.name)))
-    .case(actions.loadMessages, (state, payload) => (state.setMessages(payload)))
+    .case(actions.selectRoom.started, (state, payload) => {
+            
+            state = state.selectRoom(payload.name);
+            state = state.setLoading(true);
+            return state;
+        }
+    )
+    .case(actions.loadMessages, (state, payload) => (state.setByPayload(payload)))
+    .case(actions.loadMessagesMore.started, (state, payload) => state.setLoading(true))
+    .case(actions.loadMessagesMore.done, (state, payload) => {
+        state = state.setByPayload(payload.result);
+        return state;
+    })
+    .case(actions.loadMessagesMore.failed, (state) => (state.setLoading(false)))
+
     ;
 
 export default combineReducers({

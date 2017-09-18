@@ -56,13 +56,24 @@ const createRoomEpic: ChatEpic =
 const loadMessagesEpic: ChatEpic =
     (action$, store, depends) => action$.ofAction(actions.selectRoom.started)
         .mergeMap(action => {
-            return depends.fetchMessages$(action.payload.name)
+            return depends.fetchMessages$(action.payload.name, '')
                 .map(payload => actions.loadMessages(payload))
                 .catch(error => Rx.Observable.of(actions.selectRoom.failed({
                     params: action.payload,
                     error
                 })));
         });
+// messageの追加取得
+const loadMessagesMoreEpic: ChatEpic =
+(action$, store, depends) => action$.ofAction(actions.loadMessagesMore.started)
+    .mergeMap(action => {
+        return depends.fetchMessages$(action.payload.roomName, action.payload.nextCursor)
+            .map(payload => actions.loadMessages(payload))
+            .catch(error => Rx.Observable.of(actions.loadMessagesMore.failed({
+                params: action.payload,
+                error
+            })));
+    });
 
 // message登録
 const postMessageEpic: ChatEpic =
@@ -111,6 +122,7 @@ export const epics = combineEpics(
     loadRoomsEpic,
     createRoomEpic,
     loadMessagesEpic,
+    loadMessagesMoreEpic,
     postMessageEpic,
     postMessagedoneEpic,
     loadAccountsEpic,

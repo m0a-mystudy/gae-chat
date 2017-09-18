@@ -20,7 +20,6 @@ var _ = API("GAE Chat API", func() {
 		Methods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
 		Headers("Origin", "X-Requested-With", "Content-Type", "Accept",
 			"X-Csrftoken", "Authorization")
-		// Expose("Authorization")
 	})
 	ResponseTemplate(Created, func(pattern string) {
 		Description("Resource created")
@@ -82,11 +81,10 @@ var _ = Resource("message", func() {
 		Routing(GET(""))
 		Description("Retrieve all messages.")
 		Params(func() {
-			Param("limit", Integer)
-			Param("offset", Integer)
+			Param("nextCursor", String)
 		})
 
-		Response(OK, CollectionOf(Message))
+		Response(OK, ResponseMessages)
 		Response(NotFound)
 	})
 	Action("post", func() {
@@ -148,6 +146,19 @@ var _ = Resource("account", func() {
 		Response(BadRequest, ErrorMedia)
 	})
 
+})
+
+var ResponseMessages = MediaType("application/vnd.response_messages+json", func() {
+	Description("A ResponseMessage")
+	Attributes(func() {
+		Attribute("messages", CollectionOf(Message))
+		Attribute("next", String)
+		Required("messages", "next")
+	})
+	View("default", func() {
+		Attribute("messages")
+		Attribute("next")
+	})
 })
 
 var Message = MediaType("application/vnd.message+json", func() {

@@ -15,6 +15,7 @@
     "base-64": "^0.1.0",
     "faker": "^4.1.0",
     "immutable": "^3.8.1",
+    "immutable-assign": "^1.0.36",
     "moment": "^2.18.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
@@ -29,6 +30,9 @@
     "typescript-fsa-redux-observable": "^0.16.0"
   },
   "scripts": {
+    "linklib": "npm link gae-chat-client-api",
+    "prestart": "npm run linklib",
+    "prebuild": "npm run linklib",
     "start": "HOST=some.test.com  react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",

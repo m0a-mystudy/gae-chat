@@ -89,7 +89,7 @@ func handleAccountOrigin(h goa.Handler) goa.Handler {
 			// Not a CORS request
 			return h(ctx, rw, req)
 		}
-		if cors.MatchOrigin(origin, "http://test.com:3000") {
+		if cors.MatchOrigin(origin, "http://some.test.com:3000") {
 			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", origin)
 			rw.Header().Set("Vary", "Origin")
@@ -186,7 +186,7 @@ func handleMessageOrigin(h goa.Handler) goa.Handler {
 			// Not a CORS request
 			return h(ctx, rw, req)
 		}
-		if cors.MatchOrigin(origin, "http://test.com:3000") {
+		if cors.MatchOrigin(origin, "http://some.test.com:3000") {
 			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", origin)
 			rw.Header().Set("Vary", "Origin")
@@ -298,7 +298,7 @@ func handleRoomOrigin(h goa.Handler) goa.Handler {
 			// Not a CORS request
 			return h(ctx, rw, req)
 		}
-		if cors.MatchOrigin(origin, "http://test.com:3000") {
+		if cors.MatchOrigin(origin, "http://some.test.com:3000") {
 			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", origin)
 			rw.Header().Set("Vary", "Origin")

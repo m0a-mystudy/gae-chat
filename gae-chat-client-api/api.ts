@@ -101,6 +101,14 @@ export interface MessagePayload {
 }
 
 /**
+ * A ResponseMessage (default view)
+ */
+export interface ResponseMessages {
+    "messages": MessageCollection;
+    "next": string;
+}
+
+/**
  * A room (default view)
  */
 export interface Room {
@@ -279,10 +287,9 @@ export const MessageApiFetchParamCreator = {
      * Retrieve all messages.
      * @summary list message
      * @param name Name of room
-     * @param limit 
-     * @param offset 
+     * @param nextCursor 
      */
-    messageList(params: {  "name": string; "limit"?: number; "offset"?: number; }, options?: any): FetchArgs {
+    messageList(params: {  "name": string; "nextCursor"?: string; }, options?: any): FetchArgs {
         // verify required parameter "name" is set
         if (params["name"] == null) {
             throw new Error("Missing required parameter name when calling messageList");
@@ -291,8 +298,7 @@ export const MessageApiFetchParamCreator = {
             .replace(`{${"name"}}`, `${ params["name"] }`);
         let urlObj = url.parse(baseUrl, true);
         urlObj.query = assign({}, urlObj.query, {
-            "limit": params["limit"],
-            "offset": params["offset"],
+            "nextCursor": params["nextCursor"],
         });
         let fetchOptions: RequestInit = assign({}, { method: "GET" }, options);
 
@@ -378,10 +384,9 @@ export const MessageApiFp = {
      * Retrieve all messages.
      * @summary list message
      * @param name Name of room
-     * @param limit 
-     * @param offset 
+     * @param nextCursor 
      */
-    messageList(params: { "name": string; "limit"?: number; "offset"?: number;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<MessageCollection> {
+    messageList(params: { "name": string; "nextCursor"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ResponseMessages> {
         const fetchArgs = MessageApiFetchParamCreator.messageList(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -439,10 +444,9 @@ export class MessageApi extends BaseAPI {
      * Retrieve all messages.
      * @summary list message
      * @param name Name of room
-     * @param limit 
-     * @param offset 
+     * @param nextCursor 
      */
-    messageList(params: {  "name": string; "limit"?: number; "offset"?: number; }, options?: any) {
+    messageList(params: {  "name": string; "nextCursor"?: string; }, options?: any) {
         return MessageApiFp.messageList(params, options)(this.fetch, this.basePath);
     }
     /**
@@ -474,10 +478,9 @@ export const MessageApiFactory = function (fetch?: FetchAPI, basePath?: string) 
          * Retrieve all messages.
          * @summary list message
          * @param name Name of room
-         * @param limit 
-         * @param offset 
+         * @param nextCursor 
          */
-        messageList(params: {  "name": string; "limit"?: number; "offset"?: number; }, options?: any) {
+        messageList(params: {  "name": string; "nextCursor"?: string; }, options?: any) {
             return MessageApiFp.messageList(params, options)(fetch, basePath);
         },
         /**

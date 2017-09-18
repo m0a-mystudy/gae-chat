@@ -21,25 +21,17 @@ func NewMessageController(service *goa.Service) *MessageController {
 // List runs the list action.
 func (c *MessageController) List(ctx *app.ListMessageContext) error {
 	m := models.ContextModel(ctx)
-	IfNil := func(num *int, d int) int {
-		if num != nil {
-			return *num
-		}
-		return d
-	}
-
-	limit := IfNil(ctx.Limit, 100)
-	offset := IfNil(ctx.Offset, 0)
-
-	mes, err := m.Messages(ctx.Name, offset, limit)
+	mes, nextCursor, err := m.MessagesByCursor(ctx.Name, ctx.NextCursor)
 	if err != nil {
 		goa.LogError(ctx, "msg", "error", err.Error())
 		return ctx.NotFound()
 	}
 
-	// // res := app.MessageWithAccountCollection{}
-	list := m.ToMessageCollectionMedia(mes)
-	return ctx.OK(*list)
+	response := &app.ResponseMessages{
+		Messages: *m.ToMessageCollectionMedia(mes),
+		Next:     *nextCursor,
+	}
+	return ctx.OK(response)
 
 }
 
@@ -58,7 +50,7 @@ func (c *MessageController) Post(ctx *app.PostMessageContext) error {
 
 	// TODO set google userID
 	m.PostMessage(ctx.Name, googleID, ctx.Payload.Content)
-	return nil
+	return ctx.Created()
 }
 
 // Show runs the show action.

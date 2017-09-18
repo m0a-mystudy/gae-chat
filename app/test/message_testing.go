@@ -22,14 +22,13 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"strconv"
 )
 
 // ListMessageNotFound runs the method List of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListMessageNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.MessageController, name string, limit *int, offset *int) http.ResponseWriter {
+func ListMessageNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.MessageController, name string, nextCursor *string) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -50,13 +49,9 @@ func ListMessageNotFound(t goatest.TInterface, ctx context.Context, service *goa
 	// Setup request context
 	rw := httptest.NewRecorder()
 	query := url.Values{}
-	if limit != nil {
-		sliceVal := []string{strconv.Itoa(*limit)}
-		query["limit"] = sliceVal
-	}
-	if offset != nil {
-		sliceVal := []string{strconv.Itoa(*offset)}
-		query["offset"] = sliceVal
+	if nextCursor != nil {
+		sliceVal := []string{*nextCursor}
+		query["nextCursor"] = sliceVal
 	}
 	u := &url.URL{
 		Path:     fmt.Sprintf("/api/rooms/%v/messages", name),
@@ -68,13 +63,9 @@ func ListMessageNotFound(t goatest.TInterface, ctx context.Context, service *goa
 	}
 	prms := url.Values{}
 	prms["name"] = []string{fmt.Sprintf("%v", name)}
-	if limit != nil {
-		sliceVal := []string{strconv.Itoa(*limit)}
-		prms["limit"] = sliceVal
-	}
-	if offset != nil {
-		sliceVal := []string{strconv.Itoa(*offset)}
-		prms["offset"] = sliceVal
+	if nextCursor != nil {
+		sliceVal := []string{*nextCursor}
+		prms["nextCursor"] = sliceVal
 	}
 	if ctx == nil {
 		ctx = context.Background()
@@ -104,7 +95,7 @@ func ListMessageNotFound(t goatest.TInterface, ctx context.Context, service *goa
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListMessageOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.MessageController, name string, limit *int, offset *int) (http.ResponseWriter, app.MessageCollection) {
+func ListMessageOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.MessageController, name string, nextCursor *string) (http.ResponseWriter, *app.ResponseMessages) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -125,13 +116,9 @@ func ListMessageOK(t goatest.TInterface, ctx context.Context, service *goa.Servi
 	// Setup request context
 	rw := httptest.NewRecorder()
 	query := url.Values{}
-	if limit != nil {
-		sliceVal := []string{strconv.Itoa(*limit)}
-		query["limit"] = sliceVal
-	}
-	if offset != nil {
-		sliceVal := []string{strconv.Itoa(*offset)}
-		query["offset"] = sliceVal
+	if nextCursor != nil {
+		sliceVal := []string{*nextCursor}
+		query["nextCursor"] = sliceVal
 	}
 	u := &url.URL{
 		Path:     fmt.Sprintf("/api/rooms/%v/messages", name),
@@ -143,13 +130,9 @@ func ListMessageOK(t goatest.TInterface, ctx context.Context, service *goa.Servi
 	}
 	prms := url.Values{}
 	prms["name"] = []string{fmt.Sprintf("%v", name)}
-	if limit != nil {
-		sliceVal := []string{strconv.Itoa(*limit)}
-		prms["limit"] = sliceVal
-	}
-	if offset != nil {
-		sliceVal := []string{strconv.Itoa(*offset)}
-		prms["offset"] = sliceVal
+	if nextCursor != nil {
+		sliceVal := []string{*nextCursor}
+		prms["nextCursor"] = sliceVal
 	}
 	if ctx == nil {
 		ctx = context.Background()
@@ -170,12 +153,12 @@ func ListMessageOK(t goatest.TInterface, ctx context.Context, service *goa.Servi
 	if rw.Code != 200 {
 		t.Errorf("invalid response status code: got %+v, expected 200", rw.Code)
 	}
-	var mt app.MessageCollection
+	var mt *app.ResponseMessages
 	if resp != nil {
 		var ok bool
-		mt, ok = resp.(app.MessageCollection)
+		mt, ok = resp.(*app.ResponseMessages)
 		if !ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.MessageCollection", resp, resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.ResponseMessages", resp, resp)
 		}
 		_err = mt.Validate()
 		if _err != nil {

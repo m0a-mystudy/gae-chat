@@ -23,6 +23,7 @@ type Loader interface {
 	Room(name string) (*Room, error)
 
 	Messages(roomName string, offset, limit int) ([]*Message, error)
+	MessagesByCursor(roomName string, cursor *string) ([]*Message, *string, error)
 	Message(roomName string, messageID int64) (*Message, error)
 
 	Login(googleUserID string) (*Login, error)

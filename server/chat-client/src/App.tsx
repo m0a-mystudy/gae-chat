@@ -42,6 +42,7 @@ const mapStateToProps = (state: reducers.State, ownProps: {}): Props => ({
 
 interface DispatchProps {
     loadRooms(): AnyAction;
+    loadMessageMore(roomName: string, nextSursor?: string): AnyAction;
     loadAccounts(googleIds: string[]): AnyAction;
     createRoom(name: string): AnyAction;
     selectRoom(name: string): AnyAction;
@@ -50,6 +51,7 @@ interface DispatchProps {
 
 const mapDispatchProps = (dispatch: Redux.Dispatch<{}>, ownProps: {}): DispatchProps => ({
     loadRooms: () => dispatch(actions.loadRooms.started(undefined)),
+    loadMessageMore: (roomName, nextCursor) => dispatch(actions.loadMessagesMore.started({ roomName, nextCursor })),
     loadAccounts: googleUsrIDs => dispatch(actions.loadAccounts.started({ googleUsrIDs })),
     createRoom: name => dispatch(actions.createRoom.started({ name })),
     selectRoom: name => dispatch(actions.selectRoom.started({ name })),
@@ -59,7 +61,7 @@ const mapDispatchProps = (dispatch: Redux.Dispatch<{}>, ownProps: {}): DispatchP
 interface State {
     isOpenModal: boolean;
 }
-class App extends React.Component<Props &  DispatchProps, State> {
+class App extends React.Component<Props & DispatchProps, State> {
     constructor(props: Props & DispatchProps) {
         super(props);
         this.state = {
@@ -89,7 +91,7 @@ class App extends React.Component<Props &  DispatchProps, State> {
 
         // storeに保有してないaccount情報を探す。
         const Ids = this.props.messages.list.map((m: api.Message) => m.auther);
-        const accountDict = this.props.accounts.dict; 
+        const accountDict = this.props.accounts.dict;
         let fetchIds: string[] = [];
         Ids.forEach((id: string) => {
             if (!accountDict.get(id) && fetchIds.indexOf(id) < 0) {
@@ -108,12 +110,14 @@ class App extends React.Component<Props &  DispatchProps, State> {
             rooms,
             accounts,
             selectRoom,
+            loadMessageMore,
             postMessage,
+            messages,
 
         } = this.props;
 
         const roomNames = rooms.list.toArray().map(r => r ? r.name : '');
-        const messages = this.props.messages.list;
+        const messagesList = messages.list;
         const selectRoomName = this.props.messages.selectRoomName;
         if (!selectRoomName) { return null; }
 
@@ -154,6 +158,10 @@ class App extends React.Component<Props &  DispatchProps, State> {
                         <ChatWindow
                             windowHeight={550}
                             roomName={selectRoomName}
+                            onReadMore={() => {
+                                loadMessageMore(selectRoomName, messages.nextCursor);
+                            }}
+                            isLoading={messages.isLoading}
                             onSend={
                                 (message) => {
                                     const roomName = selectRoomName;
@@ -165,7 +173,11 @@ class App extends React.Component<Props &  DispatchProps, State> {
                             }
                         >
                             {
-                                messages.map((v: api.Message) => {
+                                messagesList.sort((a, b) => {
+                                    if (a.created === b.created ) { return 0; }
+                                    if (a.created > b.created) { return 1; }
+                                    return -1;
+                                }).map((v: api.Message) => {
                                     const a = accountsDict.get(v.auther);
                                     if (a === undefined) { return null; }
                                     const name = a.name || '';

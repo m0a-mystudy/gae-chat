@@ -44,6 +44,10 @@ definitions:
       lastLogin: 2012-02-25T05:57:31Z
       name: In voluptas placeat est.
       picture: Occaecati explicabo eos ipsa dolorem accusantium.
+    - googleUserID: Et iure accusamus doloremque qui magnam assumenda.
+      lastLogin: 2012-02-25T05:57:31Z
+      name: In voluptas placeat est.
+      picture: Occaecati explicabo eos ipsa dolorem accusantium.
     items:
       $ref: '#/definitions/Account'
     title: 'Mediatype identifier: application/vnd.account+json; type=collection; view=default'
@@ -91,26 +95,30 @@ definitions:
       content: r4jwj9vhp
       created: 2013-09-21T07:19:10Z
       id: 5.176059e+18
+    - auther: Aut laboriosam corporis ducimus beatae occaecati temporibus.
+      content: r4jwj9vhp
+      created: 2013-09-21T07:19:10Z
+      id: 5.176059e+18
     items:
       $ref: '#/definitions/Message'
     title: 'Mediatype identifier: application/vnd.message+json; type=collection; view=default'
     type: array
   MessagePayload:
     example:
-      auther: Quas quas doloribus repudiandae tempora ut nihil.
-      content: oi6k48
-      created: 2000-04-16T11:52:34Z
+      auther: Quaerat totam voluptatem qui voluptatem eum.
+      content: sp
+      created: 1992-10-18T18:44:42Z
     properties:
       auther:
-        example: Quas quas doloribus repudiandae tempora ut nihil.
+        example: Quaerat totam voluptatem qui voluptatem eum.
         type: string
       content:
-        example: oi6k48
+        example: sp
         maxLength: 400
         minLength: 1
         type: string
       created:
-        example: 2000-04-16T11:52:34Z
+        example: 1992-10-18T18:44:42Z
         format: date-time
         type: string
     required:
@@ -119,16 +127,44 @@ definitions:
     - created
     title: MessagePayload
     type: object
+  Response_messages:
+    description: A ResponseMessage (default view)
+    example:
+      messages:
+      - auther: Aut laboriosam corporis ducimus beatae occaecati temporibus.
+        content: r4jwj9vhp
+        created: 2013-09-21T07:19:10Z
+        id: 5.176059e+18
+      - auther: Aut laboriosam corporis ducimus beatae occaecati temporibus.
+        content: r4jwj9vhp
+        created: 2013-09-21T07:19:10Z
+        id: 5.176059e+18
+      - auther: Aut laboriosam corporis ducimus beatae occaecati temporibus.
+        content: r4jwj9vhp
+        created: 2013-09-21T07:19:10Z
+        id: 5.176059e+18
+      next: Voluptatem ad quas quas doloribus repudiandae tempora.
+    properties:
+      messages:
+        $ref: '#/definitions/MessageCollection'
+      next:
+        example: Voluptatem ad quas quas doloribus repudiandae tempora.
+        type: string
+    required:
+    - messages
+    - next
+    title: 'Mediatype identifier: application/vnd.response_messages+json; view=default'
+    type: object
   Room:
     description: A room (default view)
     example:
-      created: 1971-07-23T11:02:36Z
+      created: 2015-08-11T06:54:39Z
       description: room description
       name: room001
     properties:
       created:
         description: Date of creation
-        example: 1971-07-23T11:02:36Z
+        example: 2015-08-11T06:54:39Z
         format: date-time
         type: string
       description:
@@ -152,10 +188,10 @@ definitions:
   RoomCollection:
     description: RoomCollection is the media type for an array of Room (default view)
     example:
-    - created: 1971-07-23T11:02:36Z
+    - created: 2015-08-11T06:54:39Z
       description: room description
       name: room001
-    - created: 1971-07-23T11:02:36Z
+    - created: 2015-08-11T06:54:39Z
       description: room description
       name: room001
     items:
@@ -164,13 +200,13 @@ definitions:
     type: array
   RoomPayload:
     example:
-      created: 2006-06-06T04:07:42Z
+      created: 1981-01-18T09:52:25Z
       description: room description
       name: room001
     properties:
       created:
         description: Date of creation
-        example: 2006-06-06T04:07:42Z
+        example: 1981-01-18T09:52:25Z
         format: date-time
         type: string
       description:
@@ -395,10 +431,6 @@ paths:
       description: Retrieve all messages.
       operationId: message#list
       parameters:
-      - in: query
-        name: limit
-        required: false
-        type: integer
       - description: Name of room
         in: path
         maxLength: 20
@@ -408,16 +440,16 @@ paths:
         required: true
         type: string
       - in: query
-        name: offset
+        name: nextCursor
         required: false
-        type: integer
+        type: string
       produces:
-      - application/vnd.message+json; type=collection
+      - application/vnd.response_messages+json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/MessageCollection'
+            $ref: '#/definitions/Response_messages'
         "404":
           description: Not Found
       schemes:
