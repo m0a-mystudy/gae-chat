@@ -32,6 +32,9 @@ export default class Messages extends MessagesRecord implements MessagesInterfac
         next = <Messages> next.set('selectRoomName', roomName);
         return next;
     }
+    resetMessages(): Messages {
+        return <Messages> this.setIn(['list'], List<api.Message>());
+    }
     setByPayload(resp: api.ResponseMessages): Messages {
         let next = <Messages> this.withMutations((ms: Messages) => {
             ms.updateIn(['list'], (vals: api.Message[]) => vals.push(...resp.messages));

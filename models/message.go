@@ -31,7 +31,7 @@ func (m *Model) Message(roomName string, messageID int64) (*Message, error) {
 }
 
 // Limit is test
-const Limit int = 3
+const Limit int = 50
 
 // MessagesByCursor はMessageの一覧取得
 func (m *Model) MessagesByCursor(roomName string, cursorString *string) ([]*Message, *string, error) {

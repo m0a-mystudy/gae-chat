@@ -57,7 +57,7 @@ const loadMessagesEpic: ChatEpic =
     (action$, store, depends) => action$.ofAction(actions.selectRoom.started)
         .mergeMap(action => {
             return depends.fetchMessages$(action.payload.name, '')
-                .map(payload => actions.loadMessages(payload))
+                .map(payload => actions.setMessage(payload))
                 .catch(error => Rx.Observable.of(actions.selectRoom.failed({
                     params: action.payload,
                     error
@@ -68,7 +68,7 @@ const loadMessagesMoreEpic: ChatEpic =
 (action$, store, depends) => action$.ofAction(actions.loadMessagesMore.started)
     .mergeMap(action => {
         return depends.fetchMessages$(action.payload.roomName, action.payload.nextCursor)
-            .map(payload => actions.loadMessages(payload))
+            .map(payload => actions.loadMessagesMore.done({params: action.payload, result: payload}))
             .catch(error => Rx.Observable.of(actions.loadMessagesMore.failed({
                 params: action.payload,
                 error

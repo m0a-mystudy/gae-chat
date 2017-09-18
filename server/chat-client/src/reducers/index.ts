@@ -49,7 +49,10 @@ const messages = reducerWithInitialState(new Messages())
             return state;
         }
     )
-    .case(actions.loadMessages, (state, payload) => (state.setByPayload(payload)))
+    .case(actions.setMessage, (state, payload) => {
+        state = state.resetMessages(); // 初回取得なのでリセットする
+        return state.setByPayload(payload);
+    })
     .case(actions.loadMessagesMore.started, (state, payload) => state.setLoading(true))
     .case(actions.loadMessagesMore.done, (state, payload) => {
         state = state.setByPayload(payload.result);
