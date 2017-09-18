@@ -61,9 +61,6 @@ codegen:
 	@mv replaced_package.json $(CLIENTAPI)/package.json
 	cd $(CLIENTAPI) && npm link
 
-## run deploy
-deploy:
-	goapp deploy -application $(GAE_PROJECT) -version 1 ./server
 
 ## run rollback
 rollback:
@@ -73,13 +70,21 @@ rollback:
 devserver:
 	goapp serve -port $(PORT) ./server
 
-## Run dev client proxy
+## Run dev client 
 devclient:
 	@cd server/chat-client; yarn start
+
+## build client
+buildclient:
+	@cd server/chat-client; yarn build
 
 storybook:
 	@cd server/chat-client; yarn storybook
 
+
+## run deploy
+deploy: 
+	goapp deploy -application $(GAE_PROJECT) -version 1 ./server
 
 ## Run tests
 test:
@@ -89,4 +94,4 @@ test:
 help:
 	@make2help $(MAKEFILE_LIST)
 
-.PHONY: test deps help dev
+.PHONY: test deps help dev deploy buildclient
