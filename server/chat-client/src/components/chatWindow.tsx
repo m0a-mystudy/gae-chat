@@ -3,6 +3,10 @@ import * as ReactDOM from 'react-dom';
 import 'moment/locale/ja';
 
 import ReadMore from './readMore';
+
+interface State {
+  scrollToTop: boolean;
+}
 interface Props extends React.Props<{}> {
   windowHeight: number;
   roomName: string;
@@ -11,26 +15,53 @@ interface Props extends React.Props<{}> {
   isLoading?: boolean;
 }
 
-export default class ChatWindow extends React.Component<Props, {}> {
+export default class ChatWindow extends React.Component<Props, State> {
   scrollView: HTMLDivElement;
   messageBody: HTMLInputElement;
   constructor(props: Props) {
     super(props);
+    this.state = {
+      scrollToTop: false,
+    };
+
   }
   componentDidMount() {
-    this.scrollToBottom();
+    this.autoScroll();
   }
   componentDidUpdate() {
-    this.scrollToBottom();
+    this.autoScroll();
+  }
+  autoScroll() {
+    if (this.state.scrollToTop) {
+      this.scrollToTop();
+    } else {
+      this.scrollToBottom();
+    }
+  }
+  scrollToTop() {
+    let elm = ReactDOM.findDOMNode(this.scrollView);
+    elm.scrollTo({ behavior: 'smooth', top: 0 });
   }
 
   scrollToBottom() {
     let elm = ReactDOM.findDOMNode(this.scrollView);
     elm.scrollTo({ behavior: 'smooth', top: elm.scrollHeight });
   }
+
   sendAndClear() {
     this.props.onSend(this.messageBody.value);
     this.messageBody.value = '';
+    this.setState({
+      scrollToTop: false
+    });
+  }
+  readMore() {
+    if (this.props.onReadMore) { 
+      this.props.onReadMore(); 
+      this.setState({
+        scrollToTop: true
+      });
+    }
   }
   render() {
     const { roomName, windowHeight, children } = this.props;
@@ -54,9 +85,7 @@ export default class ChatWindow extends React.Component<Props, {}> {
           }}
         >
           <ReadMore  
-            onClick={() => {
-              if (this.props.onReadMore) { this.props.onReadMore(); }}
-            }
+            onClick={() => this.readMore()}
             isLoading={this.props.isLoading}
           />
 
