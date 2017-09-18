@@ -44,6 +44,9 @@ const SignIn = (props: { onSignIn?: () => void }) => (
   </div>
 );
 
+const githubUrl = 'https://github.com/m0a-mystudy/gae-chat';
+const twitterUrl = 'https://twitter.com/abe00makoto';
+
 const Navbar = (props: Props) => (
   <nav className="navbar is-light">
     <div className="navbar-brand">
@@ -51,12 +54,12 @@ const Navbar = (props: Props) => (
         <img src={logo} width="155px" height="40px" />
       </a>
 
-      <a className="navbar-item is-hidden-desktop" href="https://github.com/jgthms/bulma" target="_blank">
+      <a className="navbar-item is-hidden-desktop" href={githubUrl} target="_blank">
         <span className="icon" style={{ color: '#333' }}>
           <i className="fa fa-lg fa-github" />
         </span>
       </a>
-      <a className="navbar-item is-hidden-desktop" href="https://twitter.com/jgthms" target="_blank">
+      <a className="navbar-item is-hidden-desktop" href={twitterUrl} target="_blank">
         <span className="icon" style={{ color: '#55acee' }}>
           <i className="fa fa-lg fa-twitter" />
         </span>
@@ -65,12 +68,12 @@ const Navbar = (props: Props) => (
     <div id="navMenuTransparentExample" className="navbar-menu">
       <div className="navbar-end">
 
-        <a className="navbar-item is-hidden-desktop-only" href="https://github.com/jgthms/bulma" target="_blank">
+        <a className="navbar-item is-hidden-desktop-only" href={githubUrl} target="_blank">
           <span className="icon" style={{ color: '#333' }}>
             <i className="fa fa-lg fa-github" />
           </span>
         </a>
-        <a className="navbar-item is-hidden-desktop-only" href="https://twitter.com/jgthms" target="_blank">
+        <a className="navbar-item is-hidden-desktop-only" href={twitterUrl} target="_blank">
           <span className="icon" style={{ color: '#55acee' }}>
             <i className="fa fa-lg fa-twitter" />
           </span>
