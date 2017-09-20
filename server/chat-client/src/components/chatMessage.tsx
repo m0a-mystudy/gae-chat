@@ -12,7 +12,6 @@ interface Props extends React.Props<{}> {
 }
 
 const ChatMessage = (props: Props) => (
-    <div className="box">
         <article className="media">
             <div className="media-left">
                 <figure className="image is-64x64">
@@ -29,8 +28,6 @@ const ChatMessage = (props: Props) => (
                 </div>
             </div>
         </article>
-    </div>
-
 );
 
 export default ChatMessage;
