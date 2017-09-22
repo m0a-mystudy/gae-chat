@@ -7064,6 +7064,10 @@ typescript-fsa@^2.0.0, typescript-fsa@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/typescript-fsa/-/typescript-fsa-2.5.0.tgz#1baec01b5e8f5f34c322679d1327016e9e294faf"
 
+typescript@^2.5.3-insiders.20170919:
+  version "2.5.3-insiders.20170919"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.5.3-insiders.20170919.tgz#eb3c26c12db206f4c36a85ea7d2c142e3c4dd72e"
+
 typescript@~2.4.0:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.4.2.tgz#f8395f85d459276067c988aa41837a8f82870844"

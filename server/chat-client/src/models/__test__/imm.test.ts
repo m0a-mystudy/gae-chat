@@ -15,3 +15,14 @@ it('renders without crashing', () => {
     
     expect(nest2.a.b.c[2]).toBe(5);
 });
+
+it('iasgin test', () => {
+    let nest1 = { a: {} , b: {}, c: {}, d: 'sample'};
+    let nest2 = iassign(
+        nest1,
+        n => n.b,
+        b => 5
+    );
+    console.log(nest2);
+    expect(nest2.b).toBe(5);
+});

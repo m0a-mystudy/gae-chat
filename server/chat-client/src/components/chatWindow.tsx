@@ -40,12 +40,21 @@ export default class ChatWindow extends React.Component<Props, State> {
   }
   scrollToTop() {
     let elm = ReactDOM.findDOMNode(this.scrollView);
-    elm.scrollTo({ behavior: 'smooth', top: 0 });
+    if (elm.scrollTo) {
+      elm.scrollTo({ behavior: 'smooth', top: 0 });
+    } else {
+      elm.scrollTop = 0;
+    }
+    
   }
 
   scrollToBottom() {
     let elm = ReactDOM.findDOMNode(this.scrollView);
-    elm.scrollTo({ behavior: 'smooth', top: elm.scrollHeight });
+    if (elm.scrollTo) {
+      elm.scrollTo({ behavior: 'smooth', top: elm.scrollHeight });
+    } else {
+      elm.scrollTop = elm.scrollHeight;
+    }
   }
 
   sendAndClear() {
